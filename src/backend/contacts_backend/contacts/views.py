@@ -79,7 +79,7 @@ def store_emails(email_list):
 # extracts encoded image and saves it locally for later retrieval
 def extract_and_save_image(image_data, file_name, folder_path):
     if not image_data:
-        return ''
+        return str(config('DEFAULT_PROFILE_PIC_PATH'))
     
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)    
@@ -101,7 +101,6 @@ def parsed_vcf(request):
     
     for v_card_content in file_content:
         vcard = vobject.readOne( v_card_content )
-        
         fn = vcard.fn.value if hasattr(vcard, 'fn') else ''
         tel_nos = vcard.tel_list if hasattr(vcard, 'tel') else []
         emails = vcard.email_list if hasattr(vcard, 'email') else []
