@@ -22,5 +22,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     # "" - by making it empty, we are ensuring that after the 
     # domain name, whatever is in contacts.url, will come next.
-    path("", include("contacts.urls")) 
+    path("api/", include("contacts.urls")) 
 ]
