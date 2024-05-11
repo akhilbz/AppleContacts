@@ -1,37 +1,60 @@
 "use client";
-import Image from "next/image";
+import axios from "axios";
 import { useState, useRef, useEffect } from "react";
 import ListContactCard from "./components/list_contact_card";
 import ContactCardHeader from "./components/contact_card_header";
 import { IoSearchOutline } from "@react-icons/all-files/io5/IoSearchOutline";
 import { IconContext } from "react-icons";
-import vCard from "vcf";
 export default function Home() {
   const [isResizing, setIsResizing] = useState(false);
   const [leftWidth, setLeftWidth] = useState(25); // Initial width in percentage
+  const [contacts, setContacts] = useState([]);
   const containerRef = useRef(null);
 
-  // var cards = vCard.parse(JSON.stringify(/Users/akhileshbitla/Work/projects/contacts/src/contacts.vcf))
-  // console.log(cards);
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/read-vcf/') 
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+    const fetchContacts = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/contacts/?format=json');
+        console.log(response.data[0].full_name);
+        var size = response.data.length;
+        console.log(size);
+        var all_contacts = [];
+        var total = 0
+        for (var c = 'a'.charCodeAt(0); c < 'z'.charCodeAt(0); c++) {
+          console.log(String.fromCharCode(c));
+          var sorted_contacts = []
+          for (var j = 0; j < size; j++) {
+            const contact = response.data[j].full_name;
+            // console.log(contact[contact.length - 1].toLowerCase().charAt(0));
+            if (String.fromCharCode(c) == contact[contact.length - 1].toLowerCase().charAt(0)) {
+              sorted_contacts.push(response.data[j]);
             }
-            return response.text();
-        })
-        .then(text => {
-          console.log(text);
-          var cards = vCard.parse(text);
-          console.log(cards);
-        })
-        .catch(error => {
-            console.log(error);
-        });
+          }
+          all_contacts.push(sorted_contacts);
+          total += sorted_contacts.length;
+        }
+
+        var leftover_contacts = []
+        for (var k = 0; k < size; k++) {
+          const contact = response.data[k].full_name;
+          if (String.fromCharCode('a') > contact[contact.length - 1].toLowerCase().charAt(0)
+          && contact[contact.length - 1].toLowerCase().charAt(0) < String.fromCharCode('z')) {
+            leftover_contacts.push(contact);
+          }
+        }
+        all_contacts.push(leftover_contacts);
+        total += leftover_contacts.length;
+        console.log(total);
+        console.log(all_contacts);
+        setContacts(all_contacts);
+      } catch (e) {
+        console.log('Error fetching contacts');
+    };
+  }
+  fetchContacts();
   }, []);
 
-
+  
   const handleMouseDown = (e) => {
       e.preventDefault();
       setIsResizing(true);
@@ -66,6 +89,11 @@ export default function Home() {
         <div className="absolute w-5 h-5 bg-[#d4d4d4] right-[-10px] top-1/2 cursor-col-resize rounded-xl"
         onMouseDown={handleMouseDown} />
         <ContactCardHeader letter={"A"}/>
+        {/* {contacts.map(contact => {
+          return{
+
+          };
+        })} */}
         <ListContactCard name={"Akhilesh Bitla"} />
 
       </div>
