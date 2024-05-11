@@ -44,6 +44,9 @@ def store_full_name_as_list(name):
     for i in range(len(full_name)):
         if full_name[i].startswith(' ') or full_name[i].endswith(' '):
             full_name[i] = full_name[i].strip()
+            
+    if len(full_name) > 1 and full_name[-1] == '':
+        full_name.pop()
     return full_name
 
 # stores all telephone matched with their specific types in the dictionary
