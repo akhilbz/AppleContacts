@@ -1,15 +1,36 @@
 "use client";
 import Image from "next/image";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import ListContactCard from "./components/list_contact_card";
 import ContactCardHeader from "./components/contact_card_header";
 import { IoSearchOutline } from "@react-icons/all-files/io5/IoSearchOutline";
 import { IconContext } from "react-icons";
-
+import vCard from "vcf";
 export default function Home() {
   const [isResizing, setIsResizing] = useState(false);
   const [leftWidth, setLeftWidth] = useState(25); // Initial width in percentage
   const containerRef = useRef(null);
+
+  // var cards = vCard.parse(JSON.stringify(/Users/akhileshbitla/Work/projects/contacts/src/contacts.vcf))
+  // console.log(cards);
+  useEffect(() => {
+    fetch('http://127.0.0.1:8000/read-vcf/') 
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(text => {
+          console.log(text);
+          var cards = vCard.parse(text);
+          console.log(cards);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+  }, []);
+
 
   const handleMouseDown = (e) => {
       e.preventDefault();
