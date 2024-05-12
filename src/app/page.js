@@ -15,37 +15,38 @@ export default function Home() {
     const fetchContacts = async () => {
       try {
         const response = await axios.get('http://127.0.0.1:8000/api/contacts/?format=json');
-        console.log(response.data[0].full_name);
         var size = response.data.length;
-        console.log(size);
+        // console.log(size);
         var all_contacts = [];
         var total = 0
-        for (var c = 'a'.charCodeAt(0); c < 'z'.charCodeAt(0); c++) {
-          console.log(String.fromCharCode(c));
+
+        for (var c = 'a'.charCodeAt(0); c <= 'z'.charCodeAt(0); c++) {
           var sorted_contacts = []
           for (var j = 0; j < size; j++) {
             const contact = response.data[j].full_name;
-            // console.log(contact[contact.length - 1].toLowerCase().charAt(0));
+            // console.log(contact[contact.length - 1]);
             if (String.fromCharCode(c) == contact[contact.length - 1].toLowerCase().charAt(0)) {
               sorted_contacts.push(response.data[j]);
             }
           }
-          all_contacts.push(sorted_contacts);
+          all_contacts.push({[String.fromCharCode(c).toUpperCase()] : sorted_contacts});
           total += sorted_contacts.length;
         }
 
         var leftover_contacts = []
         for (var k = 0; k < size; k++) {
           const contact = response.data[k].full_name;
-          if (String.fromCharCode('a') > contact[contact.length - 1].toLowerCase().charAt(0)
-          && contact[contact.length - 1].toLowerCase().charAt(0) < String.fromCharCode('z')) {
-            leftover_contacts.push(contact);
+          if (contact[contact.length - 1] == '' || (contact[contact.length - 1].toLowerCase().charAt(0) 
+          < 'a'.charCodeAt(0)) || (contact[contact.length - 1].toLowerCase().charAt(0) 
+          > 'z'.charCodeAt(0)) || contact[contact.length - 1].toLowerCase().charAt(0) == '(') {
+            leftover_contacts.push(response.data[k]);
           }
         }
-        all_contacts.push(leftover_contacts);
+
+        all_contacts.push({'OTHER' : leftover_contacts});
         total += leftover_contacts.length;
-        console.log(total);
-        console.log(all_contacts);
+        // console.log(total);
+        // console.log(all_contacts);
         setContacts(all_contacts);
       } catch (e) {
         console.log('Error fetching contacts');
@@ -54,7 +55,6 @@ export default function Home() {
   fetchContacts();
   }, []);
 
-  
   const handleMouseDown = (e) => {
       e.preventDefault();
       setIsResizing(true);
@@ -79,7 +79,7 @@ export default function Home() {
     onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
       {/* Contact List Container */}
       <div style={{ width: `${leftWidth}%` }}
-        className="relative bg-[#141414] min-w-[25%] h-full w-full flex-col rounded-l-xl border-r-[1px] border-[#222222] p-3">
+        className="relative bg-[#141414] min-w-[25%] h-full w-full flex flex-col rounded-l-xl border-r-[1px] border-[#222222] p-3">
         <div className="flex w-full justify-between border-b-[1px] border-[#2f2f2f] pb-3">
           <h1 className="text-center font-bold text-4xl ml-4 text-[#d4d4d4]">Contacts</h1>
           <div>
@@ -88,14 +88,22 @@ export default function Home() {
         </div>
         <div className="absolute w-5 h-5 bg-[#d4d4d4] right-[-10px] top-1/2 cursor-col-resize rounded-xl"
         onMouseDown={handleMouseDown} />
-        <ContactCardHeader letter={"A"}/>
-        {/* {contacts.map(contact => {
-          return{
-
-          };
-        })} */}
-        <ListContactCard name={"Akhilesh Bitla"} />
-
+        <div className="flex-1 overflow-y-auto">
+          {contacts.map(contact_obj => {
+            var key = Object.keys(contact_obj)[0];
+            return (
+                  contact_obj[key].length > 0 && (<>
+                    <ContactCardHeader letter={key}/>
+                    {contact_obj[key].map(contact => {
+                      return (
+                        <ListContactCard contact_info={contact} />
+                      )
+                    })}
+                  </>)
+                  );
+                })
+              }
+        </div>
       </div>
       {/* Contact Info Container */}
       <div style={{ width: `${100 - leftWidth}%`, minWidth: `40%` }}
