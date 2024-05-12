@@ -1,7 +1,12 @@
- import React from 'react';
- 
+ import React, { useState } from 'react';
+ import { useDispatch  } from 'react-redux';
+ import { setContactInfo } from '../actions'
+
  const ListContactCard = ({ contact_info }) => {
-    var full_name = ""
+    const dispatch = useDispatch();
+    const [chooseContact, setChooseContact] = useState(false);
+
+    var full_name = "";
     if (contact_info.full_name.length == 3 && contact_info.full_name[1] == ' ') {
         full_name = contact_info.full_name.join('');
     } else if (contact_info.full_name[0] == '')  {
@@ -26,7 +31,12 @@
     } 
     
     return (
-    <div className='flex w-full h-fit'>
+    <div className='flex w-full h-fit rounded-xl ' style={{ backgroundColor: chooseContact ? '#007aff' : ''}} 
+    // onClick={() => {
+    //     setChooseContact(true);
+    //     dispatch(setContactInfo(contact_info))
+    //     }}
+        >
         <h2 className='text-center m-2 flex w-full text-lg text-[#d4d4d4]'>{ full_name }</h2>
     </div>
     )

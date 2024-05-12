@@ -3,13 +3,19 @@ import axios from "axios";
 import { useState, useRef, useEffect } from "react";
 import ListContactCard from "./components/list_contact_card";
 import ContactCardHeader from "./components/contact_card_header";
+import ContactCard from "./components/contact_card";
 import { IoSearchOutline } from "@react-icons/all-files/io5/IoSearchOutline";
+import { Provider, useDispatch  } from 'react-redux';
+import { setContactInfo } from './actions';
+import store from "./store";
 import { IconContext } from "react-icons";
+
 export default function Home() {
   const [isResizing, setIsResizing] = useState(false);
   const [leftWidth, setLeftWidth] = useState(25); // Initial width in percentage
   const [contacts, setContacts] = useState([]);
   const containerRef = useRef(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchContacts = async () => {
@@ -48,6 +54,7 @@ export default function Home() {
         // console.log(total);
         // console.log(all_contacts);
         setContacts(all_contacts);
+        dispatch(setContactInfo(all_contacts[0][0]));
       } catch (e) {
         console.log('Error fetching contacts');
     };
@@ -75,6 +82,7 @@ export default function Home() {
 
 
   return (
+    <Provider store={store}>
     <main ref={containerRef} className="flex h-screen w-full overflow-hidden p-12" 
     onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
       {/* Contact List Container */}
@@ -107,8 +115,10 @@ export default function Home() {
       </div>
       {/* Contact Info Container */}
       <div style={{ width: `${100 - leftWidth}%`, minWidth: `40%` }}
-          className="bg-[#212121] flex-grow rounded-r-xl"
-      />
+      className="bg-[#212121] flex-grow rounded-r-xl p-12">
+        <ContactCard />
+      </div>
     </main>
+    </Provider>
   );
 }
