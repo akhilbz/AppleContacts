@@ -6,7 +6,7 @@ import ListContactCard from "./components/list_contact_card";
 import ContactCardHeader from "./components/contact_card_header";
 import ContactCard from "./components/contact_card";
 import { IoSearchOutline } from "@react-icons/all-files/io5/IoSearchOutline";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 import { setContactInfo } from "./action";
 import { IconContext } from "react-icons";
 
@@ -15,7 +15,7 @@ export default function Home() {
   const [leftWidth, setLeftWidth] = useState(25); // Initial width in percentage
   const [contacts, setContacts] = useState([]);
   const containerRef = useRef(null);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchContacts = async () => {
@@ -106,9 +106,6 @@ export default function Home() {
         <div className="flex-1 overflow-y-auto pr-2">
           {contacts.map((contact_obj, order_index) => {
             var contact_key = Object.keys(contact_obj)[0];
-            if (order_index == 0) {
-              dispatch(setContactInfo([contact_obj[contact_key][0]]));
-            }
             return (
                   contact_obj[contact_key].length > 0 && (<>
                     <ContactCardHeader key={order_index} letter={contact_key}/>
@@ -124,7 +121,7 @@ export default function Home() {
         </div>
       </div>
       {/* Contact Info Container */}
-      <div style={{ width: `${100 - leftWidth}%`, minWidth: `40%` }}
+      <div style={{ width: `${100 - leftWidth}%`, minWidth: `50%` }}
       className="bg-[#212121] flex-grow rounded-r-xl p-12">
         <ContactCard />
       </div>
