@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setContactInfo, setSelectedContact } from '../action';
-const ListContactCard = ({ list_index, contact_info }) => {
+const ListContactCard = ({ name_index, order_index, contact_info }) => {
 
     const selectedContact = useSelector(state => state.selectedContact);
     const dispatch = useDispatch();
@@ -31,9 +31,11 @@ const ListContactCard = ({ list_index, contact_info }) => {
     } 
     // console.log(list_index)
     return (
-    <div className='flex w-full h-fit rounded-xl ' style={{ backgroundColor: selectedContact == list_index ? '#007aff' : ''}} 
+    <div className='flex w-full h-fit rounded-xl ' 
+    style={{ backgroundColor: selectedContact[0] == name_index 
+        && selectedContact[1] == order_index ? '#007aff' : ''}} 
     onClick={() => {
-        dispatch(setSelectedContact(list_index));
+        dispatch(setSelectedContact([name_index, order_index]));
         dispatch(setContactInfo([contact_info]));
         }}>
         <h2 className='text-center m-2 flex w-full text-lg text-[#d4d4d4]'>{ full_name }</h2>

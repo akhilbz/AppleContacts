@@ -113,7 +113,7 @@ def parsed_vcf(request):
         photo_path = extract_and_save_image(photo_data, fn_list[0].lower(), config('PHOTO_FOLDER_PATH'))
         email_data = store_emails(emails)
         phone_no = store_telephone_nos(tel_nos)
-        company = vcard.org.value if hasattr(vcard, 'org') else ''
+        company = vcard.org.value[0] if hasattr(vcard, 'org') else ''
         try:
             existing_contact = Contact.objects.filter(
                 Q(full_name=fn_list) & 

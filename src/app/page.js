@@ -103,19 +103,18 @@ export default function Home() {
         </div>
         <div className="absolute w-5 h-5 bg-[#d4d4d4] right-[-10px] top-1/2 cursor-col-resize rounded-xl"
         onMouseDown={handleMouseDown} />
-        <div className="flex-1 overflow-y-auto">
-          {contacts.map((contact_obj, index) => {
+        <div className="flex-1 overflow-y-auto pr-2">
+          {contacts.map((contact_obj, order_index) => {
             var contact_key = Object.keys(contact_obj)[0];
-            // <cons></cons>ole.log(key);
-            if (index == 0) {
+            if (order_index == 0) {
               dispatch(setContactInfo([contact_obj[contact_key][0]]));
             }
             return (
                   contact_obj[contact_key].length > 0 && (<>
-                    <ContactCardHeader letter={contact_key}/>
-                    {contact_obj[contact_key].map((contact, index,) => {
+                    <ContactCardHeader key={order_index} letter={contact_key}/>
+                    {contact_obj[contact_key].map((contact, name_index) => {
                       return (
-                        <ListContactCard list_index={index} contact_info={contact} />
+                        <ListContactCard key={name_index} name_index={name_index} order_index={order_index} contact_info={contact} />
                       )
                     })}
                   </>)
