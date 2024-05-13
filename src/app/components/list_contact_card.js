@@ -1,10 +1,10 @@
- import React, { useState } from 'react';
- import { useDispatch  } from 'react-redux';
- import { setContactInfo } from '../actions'
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setContactInfo, setSelectedContact } from '../action';
+const ListContactCard = ({ list_index, contact_info }) => {
 
- const ListContactCard = ({ contact_info }) => {
+    const selectedContact = useSelector(state => state.selectedContact);
     const dispatch = useDispatch();
-    const [chooseContact, setChooseContact] = useState(false);
 
     var full_name = "";
     if (contact_info.full_name.length == 3 && contact_info.full_name[1] == ' ') {
@@ -29,14 +29,13 @@
     } else {
         full_name = contact_info.full_name.join(' ');
     } 
-    
+    // console.log(list_index)
     return (
-    <div className='flex w-full h-fit rounded-xl ' style={{ backgroundColor: chooseContact ? '#007aff' : ''}} 
-    // onClick={() => {
-    //     setChooseContact(true);
-    //     dispatch(setContactInfo(contact_info))
-    //     }}
-        >
+    <div className='flex w-full h-fit rounded-xl ' style={{ backgroundColor: selectedContact == list_index ? '#007aff' : ''}} 
+    onClick={() => {
+        dispatch(setSelectedContact(list_index));
+        dispatch(setContactInfo([contact_info]));
+        }}>
         <h2 className='text-center m-2 flex w-full text-lg text-[#d4d4d4]'>{ full_name }</h2>
     </div>
     )

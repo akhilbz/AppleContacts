@@ -1,13 +1,13 @@
 "use client";
 import axios from "axios";
+import React from 'react';
 import { useState, useRef, useEffect } from "react";
 import ListContactCard from "./components/list_contact_card";
 import ContactCardHeader from "./components/contact_card_header";
 import ContactCard from "./components/contact_card";
 import { IoSearchOutline } from "@react-icons/all-files/io5/IoSearchOutline";
-import { Provider, useDispatch  } from 'react-redux';
-import { setContactInfo } from './actions';
-import store from "./store";
+import { useDispatch } from "react-redux";
+import { setContactInfo } from "./action";
 import { IconContext } from "react-icons";
 
 export default function Home() {
@@ -51,10 +51,8 @@ export default function Home() {
 
         all_contacts.push({'OTHER' : leftover_contacts});
         total += leftover_contacts.length;
-        // console.log(total);
-        // console.log(all_contacts);
+
         setContacts(all_contacts);
-        dispatch(setContactInfo(all_contacts[0][0]));
       } catch (e) {
         console.log('Error fetching contacts');
     };
@@ -79,10 +77,19 @@ export default function Home() {
   const handleMouseUp = () => {
       setIsResizing(false);
   };
-
+  // const initial = contacts.filter((contact_obj) => {
+  //   var key = Object.keys(contact_obj)[0];
+  //   return contact_obj[key].filter((contact, index) => {
+  //     // console.log(contact);
+  //     return index == 0;
+  //   });
+  // })
+  // console.log(initial);
+  // const sortedKeys = Object.values(contacts)[0];  // Sort keys if needed
+  // // const firstElement = contacts[firstKey][0];
+  // console.log(sortedKeys);                        
 
   return (
-    <Provider store={store}>
     <main ref={containerRef} className="flex h-screen w-full overflow-hidden p-12" 
     onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
       {/* Contact List Container */}
@@ -97,14 +104,18 @@ export default function Home() {
         <div className="absolute w-5 h-5 bg-[#d4d4d4] right-[-10px] top-1/2 cursor-col-resize rounded-xl"
         onMouseDown={handleMouseDown} />
         <div className="flex-1 overflow-y-auto">
-          {contacts.map(contact_obj => {
-            var key = Object.keys(contact_obj)[0];
+          {contacts.map((contact_obj, index) => {
+            var contact_key = Object.keys(contact_obj)[0];
+            // <cons></cons>ole.log(key);
+            if (index == 0) {
+              dispatch(setContactInfo([contact_obj[contact_key][0]]));
+            }
             return (
-                  contact_obj[key].length > 0 && (<>
-                    <ContactCardHeader letter={key}/>
-                    {contact_obj[key].map(contact => {
+                  contact_obj[contact_key].length > 0 && (<>
+                    <ContactCardHeader letter={contact_key}/>
+                    {contact_obj[contact_key].map((contact, index,) => {
                       return (
-                        <ListContactCard contact_info={contact} />
+                        <ListContactCard list_index={index} contact_info={contact} />
                       )
                     })}
                   </>)
@@ -119,6 +130,5 @@ export default function Home() {
         <ContactCard />
       </div>
     </main>
-    </Provider>
   );
 }

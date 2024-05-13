@@ -1,15 +1,17 @@
 import React from 'react';
-import { useSelector } from "react-redux";
+import { useSelector } from 'react-redux';
 
 const ContactCard = () => {
-    // const contact_info = useSelector(state => state.contactInfo)[0];
+    const contactInfo = useSelector(state => state.contactInfo);
+    // console.log("Here!!")
+    console.log(contactInfo);
     // var full_name = "";
-    // if (contact_info.full_name.length == 3 && contact_info.full_name[1] == ' ') {
-    //     full_name = contact_info.full_name.join('');
-    // } else if (contact_info.full_name[0] == '')  {
+    // if (contactInfo.full_name.length == 3 && contactInfo.full_name[1] == ' ') {
+    //     full_name = contactInfo.full_name.join('');
+    // } else if (contactInfo.full_name[0] == '')  {
     //     full_name = "No Name";
     // } else {
-    //     full_name = contact_info.full_name.join(' ');
+    //     full_name = contactInfo.full_name.join(' ');
     // }
    return (
    <div className='flex w-full h-fit'>
@@ -19,11 +21,10 @@ const ContactCard = () => {
             </div>
 
             <div className='flex-1 border-b-4 pb-4'> 
-                <h1 className='text-6xl text-right'>nn</h1>
+                <h1 className='text-6xl text-right'>{  }</h1>
             </div>
         </div>
         <div>
-
         </div>
    </div>
    )
