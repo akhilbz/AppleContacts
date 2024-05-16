@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { IoAddOutline } from "@react-icons/all-files/io5/IoAddOutline"; 
+import { setShowModal } from '../action';
 const ContactCard = () => {
+    const dispatch = useDispatch();
     const contactInfo = useSelector(state => state.contactInfo);
     const [contacts, setContacts] = useState(null);
     const [fullName, setFullName] = useState("");
@@ -9,6 +11,7 @@ const ContactCard = () => {
     const [phoneNo, setPhoneNo] = useState([]);
     const [emails, setEmails] = useState([]);
     const [photoPath, setPhotoPath] = useState("");
+
     useEffect(() => {
         let name = "";
         let company = "";
@@ -136,8 +139,8 @@ const ContactCard = () => {
      </div>
 
      <div className='flex w-full h-11 rounded-xl bg-gray-200 p-1 items-center'>
-        <div className='h-8 w-12 bg-[#141414] rounded-md flex justify-center items-center cursor-pointer'>
-            <IoAddOutline size={30} color="#d4d4d4" className=" "/>
+        <div className='h-9 w-16 bg-[#141414] rounded-lg flex justify-center items-center cursor-pointer'>
+            <IoAddOutline size={30} color="#d4d4d4" className=" " onClick={() => dispatch(setShowModal(true))}/>
         </div>
         <div>
             

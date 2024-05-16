@@ -2,20 +2,19 @@
 import axios from "axios";
 import React from 'react';
 import { useState, useRef, useEffect } from "react";
+import { useSelector } from 'react-redux';
 import ListContactCard from "./components/list_contact_card";
 import ContactCardHeader from "./components/contact_card_header";
 import ContactCard from "./components/contact_card";
 import { IoSearchOutline } from "@react-icons/all-files/io5/IoSearchOutline";
-// import { useDispatch } from "react-redux";
-import { setContactInfo } from "./action";
-import { IconContext } from "react-icons";
+import ContactModal from "./components/contact_modal";
 
 export default function Home() {
   const [isResizing, setIsResizing] = useState(false);
   const [leftWidth, setLeftWidth] = useState(25); // Initial width in percentage
   const [contacts, setContacts] = useState([]);
   const containerRef = useRef(null);
-  // const dispatch = useDispatch();
+  const showModal = useSelector(state => state.showModal);
 
   useEffect(() => {
     const fetchContacts = async () => {
@@ -76,22 +75,13 @@ export default function Home() {
 
   const handleMouseUp = () => {
       setIsResizing(false);
-  };
-  // const initial = contacts.filter((contact_obj) => {
-  //   var key = Object.keys(contact_obj)[0];
-  //   return contact_obj[key].filter((contact, index) => {
-  //     // console.log(contact);
-  //     return index == 0;
-  //   });
-  // })
-  // console.log(initial);
-  // const sortedKeys = Object.values(contacts)[0];  // Sort keys if needed
-  // // const firstElement = contacts[firstKey][0];
-  // console.log(sortedKeys);                        
+  };         
 
   return (
     <main ref={containerRef} className="flex h-screen w-full overflow-hidden p-12" 
     onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
+      {showModal && <ContactModal />}
+      <div className="flex w-full">
       {/* Contact List Container */}
       <div style={{ width: `${leftWidth}%` }}
         className="relative bg-[#141414] min-w-[25%] h-full w-full flex flex-col rounded-l-xl border-r-[1px] border-[#222222] p-3">
@@ -124,6 +114,7 @@ export default function Home() {
       <div style={{ width: `${100 - leftWidth}%`, minWidth: `50%` }}
       className="bg-[#212121] flex-grow rounded-r-xl p-12">
         <ContactCard />
+      </div>
       </div>
     </main>
   );
