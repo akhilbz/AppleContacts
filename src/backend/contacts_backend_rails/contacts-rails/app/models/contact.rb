@@ -1,8 +1,8 @@
 class Contact < ApplicationRecord
-
+  self.table_name = 'contacts_contact'
     private
   def contact_params
-    params.require(:contact).permit(
+    params.require(:contac).permit(
       full_name: [],
       company: "",
       photo_path: "",
