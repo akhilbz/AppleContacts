@@ -1,0 +1,74 @@
+<%= form_with(model: contact, local: true) do |form| %>
+  <% if contact.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(contact.errors.count, "error") %> prohibited this contact from being saved:</h2>
+
+      <ul>
+        <% contact.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :full_name, "Full Name (separate words with spaces)" %>
+    <%= form.text_field :full_name, name:'contact[full_name][]', id: "full_name_input" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :company %>
+    <%= form.text_field :company %>
+  </div>
+
+  <div class="field">
+    <%= form.label :photo_path %>
+    <%= form.text_field :photo_path %>
+  </div>
+
+  <div class="field">
+    <%= form.label :phone_no, "Phone Numbers" %>
+    <div>
+      <%= form.label :phone_no_cell, "Cell" %>
+      <%= form.text_field :phone_no_cell, value: contact.phone_no['cell'].join(", ") %>
+    </div>
+    <div>
+      <%= form.label :phone_no_home, "Home" %>
+      <%= form.text_field :phone_no_home, value: contact.phone_no['home'].join(", ") %>
+    </div>
+    <div>
+      <%= form.label :phone_no_pref, "Preferred" %>
+      <%= form.text_field :phone_no_pref, value: contact.phone_no['pref'].join(", ") %>
+    </div>
+  </div>
+
+  <div class="field">
+    <%= form.label :email, "Emails" %>
+    <div>
+      <%= form.label :email_home, "Home" %>
+      <%= form.text_field :email_home, value: contact.email['home'].join(", ") %>
+    </div>
+    <div>
+      <%= form.label :email_internet, "Internet" %>
+      <%= form.text_field :email_internet, value: contact.email['internet'].join(", ") %>
+    </div>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const form = document.querySelector("form");
+    form.addEventListener("actions", function(event) {
+      // Process full name input into an array
+      const fullNameInput = document.getElementById("full_name_input");
+      const fullNameHidden = document.getElementById("full_name_hidden");
+      const fullNames = fullNameInput.value.split(" ").map(name => name.trim()).filter(name => name !== "");
+      fullNameInput.value = JSON.stringify(fullNames);
+    });
+  });
+</script>

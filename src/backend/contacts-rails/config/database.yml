@@ -1,0 +1,24 @@
+
+default: &default
+  adapter: mysql2
+  encoding: utf8
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: <%= ENV['DATABASE_USER'] %>
+  password: <%= ENV['DATABASE_PASSWORD'] %>
+  host: localhost
+
+development:
+  <<: *default
+  database: <%= ENV['DATABASE_NAME'] %>
+
+# test:
+#   <<: *default
+#   database: apple_contacts
+
+# production:
+#   <<: *default
+#   database: your_production_database_name
+#   username: your_production_db_username
+#   password: <%= ENV['PRODUCTION_DATABASE_PASSWORD'] %>
+#   host: your_production_db_host
+
