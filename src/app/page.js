@@ -19,7 +19,7 @@ export default function Home() {
   useEffect(() => {
     const fetchContacts = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/contacts/?format=json');
+        const response = await axios.get('http://127.0.0.1:3000/contacts.json/');
         var size = response.data.length;
         // console.log(size);
         var all_contacts = [];
