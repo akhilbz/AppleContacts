@@ -32,7 +32,7 @@ const ContactCard = () => {
 
             // Company Extraction:
             company = contactInfo[0].company;
-            console.log(company);
+            // console.log(company);
             // Phone Number Extraction:
             phoneNos = contactInfo[0].phone_no;
 
@@ -42,7 +42,7 @@ const ContactCard = () => {
             // Photo Path Extraction:
             photoPath = contactInfo[0].photo_path;
         }
-        console.log(photoPath);
+        // console.log(photoPath);
         if (contactInfo.length != 0) setContacts(contactInfo);
         setFullName(name);
         setCompany(company);
@@ -50,8 +50,8 @@ const ContactCard = () => {
         setEmails(emails);
         setPhotoPath(photoPath);
     }, [contactInfo]);
-    console.log(phoneNo);
-    console.log(emails);
+    // console.log(phoneNo);
+    // console.log(emails);
    return (
     <>
     {contacts == null && 
