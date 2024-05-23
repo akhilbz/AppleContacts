@@ -14,7 +14,7 @@ export default function Home() {
   const [middleWidth, setMiddleWidth] = useState(25); // Initial width in percentage
   const [isLCResizing, setIsLCResizing] = useState(false);
   const [leftWidth, setLeftWidth] = useState(20); // Initial width in percentage
-  const [rightWidth, setRighteWidth] = useState(55); // Initial width in percentage
+  const [rightWidth, setRightWidth] = useState(55); // Initial width in percentage
   const [contacts, setContacts] = useState([]);
   const containerRef = useRef(null);
   const showModal = useSelector(state => state.showModal);
@@ -85,6 +85,7 @@ export default function Home() {
     setIsLCResizing(true);
   };
 
+  // throttle helps with the smoothness of the slider.
   const lcHandleMouseMove = throttle((e) => {
     if (isLCResizing) {
       const newWidth = e.clientX;
@@ -111,8 +112,11 @@ export default function Home() {
       onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
       {showModal && <ContactModal />}
       {/* Lists Container */}
-      {leftWidth != 0 && (<div className="relative bg-[#161616] h-full rounded-l-xl z-10 flex p-3" style={{ width: `${leftWidth}%`, maxWidth: `20%` }}>
-        <div className="absolute w-5 h-5 bg-[#d4d4d4] right-[-10px] top-1/2 cursor-col-resize rounded-xl"
+      {leftWidth != 0 && (<div className="relative bg-[#161616] h-full rounded-l-xl  flex p-3" style={{ width: `${leftWidth}%`, maxWidth: `20%` }}>
+        <div className="flex w-full h-fit justify-between border-b-[1px] border-[#2f2f2f] pb-3">
+          <h1 className="text-center font-bold text-4xl ml-4 text-[#d4d4d4]">Lists</h1>
+        </div>
+        <div className="absolute w-5 h-5 bg-[#d4d4d4] right-[-10px] z-[5] top-1/2 cursor-col-resize rounded-xl"
           onMouseDown={lcHandleMouseDown} />
       </div>)}
       <div className="flex h-full w-full">
@@ -128,7 +132,7 @@ export default function Home() {
             </div>
             <div className="absolute w-5 h-5 bg-[#d4d4d4] right-[-10px] top-1/2 cursor-col-resize rounded-xl"
               onMouseDown={mcHandleMouseDown} />
-            <div className="flex-1 overflow-y-auto pr-2">
+            <div className="flex-1 overflow-y-auto px-2">
               {contacts.map((contact_obj, order_index) => {
                 var contact_key = Object.keys(contact_obj)[0];
                 return (
@@ -148,7 +152,7 @@ export default function Home() {
           {/* Contact Info Container */}
           <div style={{ width: `${rightWidth - middleWidth}%`, minWidth: `60%` }}
             className="bg-[#212121] flex-grow rounded-r-xl p-12">
-            <ContactCard />
+            <ContactCard listsColumnWidth={leftWidth} />
           </div>
         </div>
       </div>

@@ -4,6 +4,7 @@ const initialState = {
     contactInfo: [],
     selectedContact: 0,
     showModal: false,
+    showDropUp: false,
   };
   
   const rootReducer = (state = initialState, action) => {
@@ -15,6 +16,8 @@ const initialState = {
             return { ...state, selectedContact: action.payload };
         case 'SET_SHOW_MODAL':
             return { ...state, showModal: action.payload };
+            case 'SET_SHOW_DROP_UP':
+              return { ...state, showDropUp: action.payload };
       default:
         return state;
     }
