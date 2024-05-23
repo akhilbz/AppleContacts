@@ -2,10 +2,9 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setShowModal } from '../action';
 
-const ContactCardDropUp = () => {
+const ContactCardDropUp = ({ contactInfo }) => {
     const dispatch = useDispatch();
 
-    //dispatch(setShowModal(true))
   return (
     <>
       <ul className="text-[#9B9B9B] cursor-pointer">

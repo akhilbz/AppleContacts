@@ -152,7 +152,7 @@ export default function Home() {
           {/* Contact Info Container */}
           <div style={{ width: `${rightWidth - middleWidth}%`, minWidth: `60%` }}
             className="bg-[#212121] flex-grow rounded-r-xl p-12">
-            <ContactCard listsColumnWidth={leftWidth} />
+            <ContactCard listsColumnWidth={leftWidth} setListsColumnWidth={setLeftWidth} />
           </div>
         </div>
       </div>
