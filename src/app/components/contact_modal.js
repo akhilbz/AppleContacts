@@ -43,7 +43,7 @@ function ContactModal() {
                     </Dropzone>
                 </div>
                 <div className='flex flex-row w-[full] justify-evenly items-center h-[15%] bg-[#111111] rounded-xl mx-5'>
-                    <h1 className='text-[#343434] text-xl'>{`Uploaded File: ${file? file.name : "Not Uploaded"}`}</h1>
+                    <h1 className='text-[#343434] text-xl'>{`Uploaded File: ${file? file.name : "No File Uploaded"}`}</h1>
                     <div className='w-fit p-2 bg-[#545454] rounded-lg flex justify-center items-center cursor-pointer'>
                         <h1 className='text-[#141414] text-center'>Extract Contacts</h1>
                     </div>
