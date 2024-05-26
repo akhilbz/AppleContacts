@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_16_205833) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_26_201314) do
   create_table "auth_group", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", limit: 150, null: false
     t.index ["name"], name: "name", unique: true
@@ -107,6 +107,22 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_16_205833) do
     t.index ["expire_date"], name: "django_session_expire_date_a5c62663"
   end
 
+  create_table "list_contacts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "list_id", null: false
+    t.bigint "contact_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["contact_id"], name: "index_list_contacts_on_contact_id"
+    t.index ["list_id", "contact_id"], name: "index_list_contacts_on_list_id_and_contact_id", unique: true
+    t.index ["list_id"], name: "index_list_contacts_on_list_id"
+  end
+
+  create_table "lists", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "auth_group_permissions", "auth_group", column: "group_id", name: "auth_group_permissions_group_id_b120cbf9_fk_auth_group_id"
   add_foreign_key "auth_group_permissions", "auth_permission", column: "permission_id", name: "auth_group_permissio_permission_id_84c5c92e_fk_auth_perm"
   add_foreign_key "auth_permission", "django_content_type", column: "content_type_id", name: "auth_permission_content_type_id_2f476e4b_fk_django_co"
@@ -116,4 +132,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_16_205833) do
   add_foreign_key "auth_user_user_permissions", "auth_user", column: "user_id", name: "auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id"
   add_foreign_key "django_admin_log", "auth_user", column: "user_id", name: "django_admin_log_user_id_c564eba6_fk_auth_user_id"
   add_foreign_key "django_admin_log", "django_content_type", column: "content_type_id", name: "django_admin_log_content_type_id_c4bce8eb_fk_django_co"
+  add_foreign_key "list_contacts", "contacts_contact", column: "contact_id"
+  add_foreign_key "list_contacts", "lists"
 end
