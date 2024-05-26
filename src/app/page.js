@@ -116,6 +116,7 @@ export default function Home() {
         <div className="flex w-full h-fit justify-between border-b-[1px] border-[#2f2f2f] pb-3">
           <h1 className="text-center font-bold text-4xl ml-4 text-[#d4d4d4]">Lists</h1>
         </div>
+        {/* Insert List List Card */}
         <div className="absolute w-5 h-5 bg-[#d4d4d4] right-[-10px] z-[5] top-1/2 cursor-col-resize rounded-xl"
           onMouseDown={lcHandleMouseDown} />
       </div>)}
