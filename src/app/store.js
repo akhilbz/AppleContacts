@@ -3,6 +3,7 @@ import { configureStore } from '@reduxjs/toolkit';
 const initialState = {
     contactInfo: [],
     selectedContact: 0,
+    selectedList: 1,
     showModal: false,
     showDropUp: false,
   };
@@ -14,6 +15,8 @@ const initialState = {
             return { ...state, contactInfo: [...action.payload] };
         case 'SET_SELECTED_CONTACT':
             return { ...state, selectedContact: action.payload };
+            case 'SET_SELECTED_LIST':
+              return { ...state, selectedList: action.payload };
         case 'SET_SHOW_MODAL':
             return { ...state, showModal: action.payload };
             case 'SET_SHOW_DROP_UP':

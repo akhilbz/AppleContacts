@@ -3,6 +3,7 @@ export const SET_CONTACT_INFO = 'SET_CONTACT_INFO';
 export const SET_SELECTED_CONTACT = 'SET_SELECTED_CONTACT';
 export const SET_SHOW_MODAL = 'SET_SHOW_MODAL';
 export const SET_SHOW_DROP_UP = 'SET_SHOW_DROP_UP';
+export const SET_SELECTED_LIST = 'SET_SELECTED_LIST';
 
 // action creators
 export const setContactInfo = (contactInfo) => ({
@@ -13,6 +14,11 @@ export const setContactInfo = (contactInfo) => ({
 export const setSelectedContact = (selectedContact) => ({
     type: SET_SELECTED_CONTACT,
     payload: selectedContact
+});
+
+export const setSelectedList = (selectedList) => ({
+    type: SET_SELECTED_LIST,
+    payload: selectedList
 });
 
 export const setShowModal = (showModal) => ({
