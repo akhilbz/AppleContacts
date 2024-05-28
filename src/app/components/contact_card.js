@@ -4,7 +4,7 @@ import { IoAddOutline } from "@react-icons/all-files/io5/IoAddOutline";
 import { setShowDropUp } from '../action';
 import ContactCardDropUp from './contact_card_dropup';
 
-const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
+const ContactCard = ({ contactsLength, listsColumnWidth, setListsColumnWidth }) => {
     const dispatch = useDispatch();
     const contactInfo = useSelector(state => state.contactInfo);
     const showDropUp = useSelector(state => state.showDropUp);
@@ -32,14 +32,14 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
         document.removeEventListener('mousedown', handleClickOutside);
     };
     }, [showDropUp]);
-
+    console.log(contactInfo);
     useEffect(() => {
         let name = "";
         let company = "";
         let phoneNos = [];
         let emails = [];
         let photoPath = "";
-        console.log(contactInfo);
+        
         
         if (contactInfo.length > 0) {
             // Name Extraction:
@@ -71,12 +71,12 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
         setEmails(emails);
         setPhotoPath(photoPath);
     }, [contactInfo]);
-
+    console.log(contactsLength);
    return (
     <section className='flex flex-col w-full h-full'>
-    {contact == null && 
+    {(contactsLength == 0 || contact == null) && 
     (<div className='flex w-full h-full items-end justify-center '>
-        <h1 className='text-[#4a4a4a] font-semibold text-xl'>No Contact Selected</h1>
+        <h1 className='text-[#4a4a4a] font-semibold text-xl'>{ contactsLength == 0 ? "No Cards" : contact == null ? "No Contact Selected" : "No Cards"  }</h1>
     </div>)}
    <div className='flex flex-col w-full h-full justify-between space-y-4 '>
    {contact != null && 

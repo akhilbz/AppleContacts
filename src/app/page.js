@@ -19,6 +19,7 @@ export default function Home() {
   const [leftWidth, setLeftWidth] = useState(20); // Initial width in percentage
   const [rightWidth, setRightWidth] = useState(55); // Initial width in percentage
   const [contacts, setContacts] = useState([]);
+  const [contactsLength, setContactsLength] = useState(0);
   const [lists, setLists] = useState([]);
   const containerRef = useRef(null);
   const showModal = useSelector(state => state.showModal);
@@ -30,13 +31,13 @@ export default function Home() {
       try {
         /* Extract List Data */
         const responseLists = await axios.get('http://127.0.0.1:3000/lists/');
-        // console.log(responseLists.data.list)
+        console.log(responseLists.data.list)
 
          /* Extract Corresponding Contacts Data */
-        console.log(selectedList);
         const responseContacts = await axios.get(`http://127.0.0.1:3000/lists/${selectedList}`);
         var size = responseContacts.data.contacts.length;
-
+        console.log(size);
+        setContactsLength(size);
         /* Contacts Sorting Algorithm A-Z */
         var all_contacts = [];
         var total = 0;
@@ -66,6 +67,7 @@ export default function Home() {
         total += leftover_contacts.length;
         /* ^^^^^^^^^^^^^^^^^^^^^^ */
 
+        console.log(all_contacts);
         setLists(responseLists.data.list);
         setContacts(all_contacts);
       } catch (e) {
@@ -179,7 +181,7 @@ export default function Home() {
           {/* Contact Info Container */}
           <div style={{ width: `${rightWidth - middleWidth}%`, minWidth: `60%` }}
             className="bg-[#212121] flex-grow rounded-r-xl p-12">
-            <ContactCard listsColumnWidth={leftWidth} setListsColumnWidth={setLeftWidth} />
+            <ContactCard contactsLength={contactsLength} listsColumnWidth={leftWidth} setListsColumnWidth={setLeftWidth} />
           </div>
         </div>
       </div>

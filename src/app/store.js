@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 
 const initialState = {
     contactInfo: [],
+    lists: [],
     selectedContact: 0,
     selectedList: 1,
     showModal: false,
