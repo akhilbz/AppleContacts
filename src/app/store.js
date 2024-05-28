@@ -8,6 +8,7 @@ const initialState = {
     showModal: false,
     showDropUpModal: false,
     showDropUp: false,
+    uploadAlert: false,
   };
   
   const rootReducer = (state = initialState, action) => {
@@ -25,6 +26,8 @@ const initialState = {
             return { ...state, showDropUpModal: action.payload };
         case 'SET_SHOW_DROP_UP':
             return { ...state, showDropUp: action.payload };
+        case 'SET_UPLOAD_ALERT':
+            return { ...state, uploadAlert: action.payload };
       default:
         return state;
     }

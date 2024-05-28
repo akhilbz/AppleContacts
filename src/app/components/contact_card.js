@@ -79,7 +79,7 @@ const ContactCard = ({ contactsLength, listsColumnWidth, setListsColumnWidth }) 
         <h1 className='text-[#4a4a4a] font-semibold text-xl'>{ contactsLength == 0 ? "No Cards" : contact == null ? "No Contact Selected" : "No Cards"  }</h1>
     </div>)}
    <div className='flex flex-col w-full h-full justify-between space-y-4 '>
-   {contact != null && 
+   {(contactsLength != 0 && contact != null) && 
    (<div className='flex flex-col overflow-y-auto w-full h-fit space-y-4'>
        <div className='flex w-full items-center space-x-6 justify-between pb-6'> 
             <div className=' w-28 h-28  bg-gray-200 rounded-full overflow-hidden flex items-center justify-center'>

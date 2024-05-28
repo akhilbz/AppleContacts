@@ -1,5 +1,6 @@
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, HttpResponse
 from django.http import JsonResponse
 from django.db.models import Q
@@ -24,9 +25,9 @@ class ContactList(ListAPIView):
 
 
 # Reads and converts a vcf file into a parseable string
-def read_and_convert_vcf_to_string(): # TODO: must pass in a file_path into this function
+def read_and_convert_vcf_to_string(file_path): # TODO: must pass in a file_path into this function
     # Path to my VCF file on the server
-    file_path = os.path.join(config('VCF_FILE_PATH'), 'contacts.vcf')
+    # file_path = os.path.join(config('VCF_FILE_PATH'), 'contacts.vcf')
     try:
         with open(file_path, 'r') as file:
             file_content = file.read().split("BEGIN:VCARD")
@@ -43,7 +44,7 @@ def store_full_name_as_list(name):
     
     for i in range(len(full_name)):
         if full_name[i].startswith(' ') or full_name[i].endswith(' '):
-            full_name[i] = full_name[i].strip()
+            full_name[i] = full_name[i].strip()                                 
             
     if len(full_name) > 1 and full_name[-1] == '':
         full_name.pop()
@@ -98,10 +99,28 @@ def extract_and_save_image(image_data, file_name, folder_path):
 
 # iterates through each vcard from the vcard content list and extracts each
 # attribute from the vcard to populate the mysql db.
+@csrf_exempt
 def parsed_vcf(request):
-    file_content = read_and_convert_vcf_to_string()
+    if request.method == 'POST':
+        file_name = request.POST.get('file_name')
+        # vcf_file = request.FILES.get('file')
+        # if not vcf_file:
+        #     return JsonResponse({'error': 'No file uploaded'}, status=400)
+        
+        # folder_path = config('VCF_FILE_PATH')
+        
+        # if not os.path.exists(folder_path):
+        #     os.makedirs(folder_path)
+        
+        file_path = os.path.join(config('VCF_FILE_PATH'), file_name)
+        
+        # with open(file_path, 'wb+') as destination:
+        #     for chunk in vcf_file.chunks():
+        #         destination.write(chunk)
+
+    file_content = read_and_convert_vcf_to_string(file_path)
     errors = []
-    
+    contacts_data = []
     for v_card_content in file_content:
         vcard = vobject.readOne( v_card_content )
         fn = vcard.fn.value if hasattr(vcard, 'fn') else ''
@@ -130,10 +149,14 @@ def parsed_vcf(request):
                     phone_no=phone_no,
                     company=company)
                 contact.save()
+                contacts_data.append(contact)
         except Exception as e:
             errors.append(f"Failed to process contact {fn}: {str(e)}")
 
     if errors:
         return JsonResponse({"success": False, "errors": errors}, status=500)
     
-    return JsonResponse({"success": True, "message": "All contacts imported successfully"})
+    serialized_contacts = ContactSerializer(contacts_data, many=True).data
+
+    
+    return JsonResponse({"success": True, "message": "All contacts imported successfully", "contacts": serialized_contacts})

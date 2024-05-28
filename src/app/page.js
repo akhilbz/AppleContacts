@@ -2,7 +2,8 @@
 import axios from "axios";
 import React from 'react';
 import { useState, useRef, useEffect } from "react";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUploadAlert } from "./action";
 import ListContactCard from "./components/list_contact_card";
 import ListListCard from "./components/list_list_card";
 import ContactCardHeader from "./components/contact_card_header";
@@ -23,12 +24,16 @@ export default function Home() {
   const [lists, setLists] = useState([]);
   const containerRef = useRef(null);
   const showModal = useSelector(state => state.showModal);
+  const uploadAlert = useSelector(state => state.uploadAlert);
   const showDropUpModal = useSelector(state => state.showDropUpModal);
   const selectedList = useSelector(state => state.selectedList);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        /* Alerts the useEffect to rerun fetchData and sets to false as upload modal is successful. */
+        dispatch(setUploadAlert(false)); 
         /* Extract List Data */
         const responseLists = await axios.get('http://127.0.0.1:3000/lists/');
         console.log(responseLists.data.list)
@@ -75,7 +80,7 @@ export default function Home() {
       }
     };
     fetchData();
-  }, [selectedList]);
+  }, [selectedList, uploadAlert]);
 
   
   const mcHandleMouseDown = (e) => {

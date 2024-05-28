@@ -5,7 +5,7 @@ export const SET_SHOW_MODAL = 'SET_SHOW_MODAL';
 export const SET_SHOW_DROPUP_MODAL = 'SET_SHOW_DROPUP_MODAL';
 export const SET_SHOW_DROP_UP = 'SET_SHOW_DROP_UP';
 export const SET_SELECTED_LIST = 'SET_SELECTED_LIST';
-
+export const SET_UPLOAD_ALERT = 'SET_UPLOAD_ALERT';
 // action creators
 export const setContactInfo = (contactInfo) => ({
     type: SET_CONTACT_INFO,
@@ -36,4 +36,9 @@ export const setShowDropupModal = (showDropUpModal) => ({
 export const setShowDropUp = (showDropUp) => ({
     type: SET_SHOW_DROP_UP,
     payload: showDropUp
+});
+
+export const setUploadAlert = (uploadAlert) => ({
+    type: SET_UPLOAD_ALERT,
+    payload: uploadAlert
 });

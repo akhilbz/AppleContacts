@@ -55,6 +55,8 @@ gem "mysql2"
 # CORS
 gem 'rack-cors'
 
+# RestClient
+gem 'rest-client'
 
 # environment variables gem
 gem 'dotenv-rails', groups: [:development, :test]

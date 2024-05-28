@@ -19,7 +19,7 @@ function DropupModal() {
             if (response.status === 201) { 
                 setListName(''); 
                 dispatch(setShowDropupModal(false));
-                dispatch(setSelectedList(selectedList + 1));
+                dispatch(setSelectedList(response.data.id));
             } else {
                 // Handle errors here
                 console.error('Error creating list:', response.data);
