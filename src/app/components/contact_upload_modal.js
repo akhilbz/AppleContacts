@@ -3,9 +3,8 @@ import Dropzone from 'react-dropzone'
 import { useDispatch } from 'react-redux';
 import { setShowModal } from '../action';
 import { MdOutlineFileUpload } from "react-icons/md";
-import { FileUploader } from "react-drag-drop-files";
-
 import { X } from 'lucide-react';
+
 function ContactModal() {
     const fileTypes = ["vcf"];
     const [file, setFile] = useState(null);

@@ -52,6 +52,10 @@ gem "faraday"
 # mysql
 gem "mysql2"
 
+# CORS
+gem 'rack-cors'
+
+
 # environment variables gem
 gem 'dotenv-rails', groups: [:development, :test]
 

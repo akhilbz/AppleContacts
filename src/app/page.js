@@ -8,7 +8,8 @@ import ListListCard from "./components/list_list_card";
 import ContactCardHeader from "./components/contact_card_header";
 import ContactCard from "./components/contact_card";
 import { IoSearchOutline } from "@react-icons/all-files/io5/IoSearchOutline";
-import ContactModal from "./components/contact_modal";
+import ContactModal from "./components/contact_upload_modal";
+import DropupModal from "./components/dropup_modal";
 import { throttle } from "lodash";
 
 export default function Home() {
@@ -21,17 +22,18 @@ export default function Home() {
   const [lists, setLists] = useState([]);
   const containerRef = useRef(null);
   const showModal = useSelector(state => state.showModal);
+  const showDropUpModal = useSelector(state => state.showDropUpModal);
   const selectedList = useSelector(state => state.selectedList);
-
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         /* Extract List Data */
         const responseLists = await axios.get('http://127.0.0.1:3000/lists/');
-        console.log(responseLists.data.list)
+        // console.log(responseLists.data.list)
 
          /* Extract Corresponding Contacts Data */
+        console.log(selectedList);
         const responseContacts = await axios.get(`http://127.0.0.1:3000/lists/${selectedList}`);
         var size = responseContacts.data.contacts.length;
 
@@ -71,7 +73,7 @@ export default function Home() {
       }
     };
     fetchData();
-  }, []);
+  }, [selectedList]);
 
   
   const mcHandleMouseDown = (e) => {
@@ -127,6 +129,7 @@ export default function Home() {
     <main ref={containerRef} className="flex h-screen w-full overflow-hidden p-12"
       onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
       {showModal && <ContactModal />}
+      {showDropUpModal && <DropupModal />}
       {leftWidth != 0 && (<div className="relative bg-[#161616] h-full rounded-l-xl  flex flex-col p-3" style={{ width: `${leftWidth}%`, maxWidth: `20%` }}>
         <div className="flex w-full h-fit justify-between border-b-[1px] border-[#2f2f2f] pb-3">
           <h1 className="text-center font-bold text-4xl ml-4 text-[#d4d4d4]">Lists</h1>
