@@ -7,15 +7,26 @@ import { MdOutlineFileUpload } from "react-icons/md";
 import { X } from 'lucide-react';
 
 // TODO: Create upload notification (in green)
+// TODO: Files with spaces should be able to be uploaded
+// TODO: Immediate updates on contact column not working yet
 function ContactModal() {
     const fileTypes = ["vcf"];
     const [file, setFile] = useState(null);
+    const [incorrectFileAlert, setIncorrectFileAlert] = useState(false);
     const dispatch = useDispatch();
     const selectedList = useSelector(state => state.selectedList);
 
     const handleChange = (file) => {
-        setFile(file);
+        if (file?.name.split('.').pop() === "vcf") {
+            setIncorrectFileAlert(false);
+            setFile(file);
+        } else {
+            setIncorrectFileAlert(true);
+        }
+        
     };
+
+    console.log(file);
 
     const handleSubmit = () => {
         console.log(file.path);
@@ -63,11 +74,11 @@ function ContactModal() {
                     </Dropzone>
                 </div>
                 <div className='flex flex-row w-[full] justify-evenly items-center h-[15%] bg-[#111111] rounded-xl mx-5'>
-                    <h1 className='text-[#343434] text-xl'>{`Uploaded File: ${file? file.name : "No File Uploaded"}`}</h1>
-                    <div className='w-fit p-2 bg-[#545454] rounded-lg flex justify-center items-center cursor-pointer'
+                    <h1 className={`text-[#343434] ${incorrectFileAlert ? "text-[#e63946]" : "text-[#343434]"} text-xl`}>{`Uploaded File: ${ incorrectFileAlert ? "Incorrect File Type - Must Use (.vcf)" : file ? file.name : "No File Uploaded"}`}</h1>
+                    <button disabled={!file} className={`w-fit p-2 ${file ? 'bg-[#545454] text-[#141414] cursor-pointer' : 'bg-[#4a4a4a] text-[#242424] cursor-default'}  rounded-lg flex justify-center items-center cursor-pointer`}
                     onClick={() => { handleSubmit(); dispatch(setShowModal(false)); dispatch(setUploadAlert(true));}}>
-                        <h1 className='text-[#141414] text-center'>Extract Contacts</h1>
-                    </div>
+                        <h1 className='text-center'>Extract Contacts</h1>
+                    </button>
                 </div>
             </div>
         </div>

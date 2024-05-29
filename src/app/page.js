@@ -34,6 +34,8 @@ export default function Home() {
       try {
         /* Alerts the useEffect to rerun fetchData and sets to false as upload modal is successful. */
         dispatch(setUploadAlert(false)); 
+        if (uploadAlert) { /* Do Nothing */}
+        
         /* Extract List Data */
         const responseLists = await axios.get('http://127.0.0.1:3000/lists/');
         console.log(responseLists.data.list)
@@ -80,7 +82,7 @@ export default function Home() {
       }
     };
     fetchData();
-  }, [selectedList, uploadAlert]);
+  }, [selectedList, uploadAlert, dispatch]);
 
   
   const mcHandleMouseDown = (e) => {

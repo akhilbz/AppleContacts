@@ -30,7 +30,6 @@ class VcfController < ApplicationController
         f.write(file.read)
       end
   
-    # Optionally, send the file name to the Django backend
       begin
         response = RestClient.post('http://127.0.0.1:8000/api/parse-vcf/', { file_name: file.original_filename })
         parsed_data = JSON.parse(response.body)
