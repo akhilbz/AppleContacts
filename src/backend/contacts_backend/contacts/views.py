@@ -7,12 +7,14 @@ from django.db.models import Q
 from io import BytesIO
 from PIL import Image
 from decouple import config
-from .models import Contact
+from .models import Contact, List, ListContact
 from .contact_serializer import ContactSerializer
 import os, vobject, base64
-
+import logging
 
 # Create your views here.
+
+logger = logging.getLogger('myapp')
 
 # Home page
 def home(request):
@@ -95,32 +97,32 @@ def extract_and_save_image(image_data, file_name, folder_path):
     
     return image_path
         
-   
+
 
 # iterates through each vcard from the vcard content list and extracts each
 # attribute from the vcard to populate the mysql db.
 @csrf_exempt
 def parsed_vcf(request):
+    
     if request.method == 'POST':
         file_name = request.POST.get('file_name')
-        # vcf_file = request.FILES.get('file')
-        # if not vcf_file:
-        #     return JsonResponse({'error': 'No file uploaded'}, status=400)
-        
-        # folder_path = config('VCF_FILE_PATH')
-        
-        # if not os.path.exists(folder_path):
-        #     os.makedirs(folder_path)
-        
+        list_id = request.POST.get('list_id')
         file_path = os.path.join(config('VCF_FILE_PATH'), file_name)
-        
-        # with open(file_path, 'wb+') as destination:
-        #     for chunk in vcf_file.chunks():
-        #         destination.write(chunk)
 
     file_content = read_and_convert_vcf_to_string(file_path)
     errors = []
     contacts_data = []
+    
+    list_instance = List.objects.get(id=list_id)
+    # list_contacts = ListContact.objects.filter(
+    #             Q(list=list_instance) &
+    #             Q(contact__full_name=fn_list) & 
+    #             Q(contact__company=company) & 
+    #             Q(contact__photo_path=photo_path) &
+    #             Q(contact__email=email_data) &
+    #             Q(contact__phone_no=phone_no))
+    # logger.info("List Contact: %s", list(list_contacts))
+    
     for v_card_content in file_content:
         vcard = vobject.readOne( v_card_content )
         fn = vcard.fn.value if hasattr(vcard, 'fn') else ''
@@ -133,15 +135,25 @@ def parsed_vcf(request):
         email_data = store_emails(emails)
         phone_no = store_telephone_nos(tel_nos)
         company = vcard.org.value[0] if hasattr(vcard, 'org') else ''
+        logger.info(" List %s", list_instance)
         try:
-            existing_contact = Contact.objects.filter(
-                Q(full_name=fn_list) & 
-                Q(company=company) & 
-                Q(photo_path=photo_path) &
-                Q(email=email_data) &
-                Q(phone_no=phone_no)).exists()
+            existing_contact = ListContact.objects.filter(
+                Q(list=list_instance) & 
+                Q(contact__email=email_data) &
+                Q(contact__phone_no=phone_no))
             
-            if not existing_contact:
+            for list_contact in existing_contact:
+                contact = list_contact.contact
+                logger.info(
+                    "Existing Contact - Full Name: %s, Company: %s, Photo Path: %s, Email: %s, Phone No: %s",
+                    contact.full_name,
+                    contact.company,
+                    contact.photo_path,
+                    contact.email,
+                    contact.phone_no
+                )
+
+            if not existing_contact.exists():
                 contact = Contact(
                     full_name=fn_list,
                     photo_path=photo_path,
@@ -150,6 +162,9 @@ def parsed_vcf(request):
                     company=company)
                 contact.save()
                 contacts_data.append(contact)
+                
+                
+            ListContact.objects.create(list=list_instance, contact=contact)
         except Exception as e:
             errors.append(f"Failed to process contact {fn}: {str(e)}")
 
@@ -157,6 +172,6 @@ def parsed_vcf(request):
         return JsonResponse({"success": False, "errors": errors}, status=500)
     
     serialized_contacts = ContactSerializer(contacts_data, many=True).data
-
+    logger.info("QuerySet:")
     
     return JsonResponse({"success": True, "message": "All contacts imported successfully", "contacts": serialized_contacts})

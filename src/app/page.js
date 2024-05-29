@@ -35,7 +35,7 @@ export default function Home() {
         /* Alerts the useEffect to rerun fetchData and sets to false as upload modal is successful. */
         dispatch(setUploadAlert(false)); 
         if (uploadAlert) { /* Do Nothing */}
-        
+
         /* Extract List Data */
         const responseLists = await axios.get('http://127.0.0.1:3000/lists/');
         console.log(responseLists.data.list)
@@ -137,6 +137,13 @@ export default function Home() {
   return (
     <main ref={containerRef} className="flex h-screen w-full overflow-hidden p-12"
       onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
+        {/* <div className="fixed left-0 w-full flex justify-center z-10">
+      <div className="mt-[85px] w-fit z-10 flex bg-yellow-300 text-black p-2 rounded-lg shadow-lg space-x-2 items-center">
+        <p className="text-sm font-normal">🚧 Updating the Experience and Projects Section to match my resume. Your patience is appreciated! 🚧</p>
+        <button onClick={() => setShowAlert(false)} className="text-black">&times;</button>
+      </div>
+    </div> */}
+        
       {showModal && <ContactModal />}
       {showDropUpModal && <DropupModal />}
       {leftWidth != 0 && (<div className="relative bg-[#161616] h-full rounded-l-xl  flex flex-col p-3" style={{ width: `${leftWidth}%`, maxWidth: `20%` }}>

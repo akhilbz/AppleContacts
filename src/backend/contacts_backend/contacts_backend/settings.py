@@ -1,4 +1,5 @@
 from decouple import config
+import os
 """
 Django settings for contacts_backend project.
 
@@ -136,3 +137,44 @@ CORS_ALLOW_ALL_ORIGINS = True  # For development only, be more restrictive for p
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',  # The domain where your React app is hosted
 ]
+
+# Logging configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'debug.log'),
+            'formatter': 'verbose',  # Using 'verbose' formatter for detailed logs
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',  # Using 'simple' formatter for console output
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',  # Set to INFO to avoid excessive internal debug logs
+            'propagate': True,
+        },
+        'myapp': {  # Replace 'myapp' with your app's name
+            'handlers': ['file'],
+            'level': 'DEBUG',  # Specific app logging set to DEBUG
+            'propagate': False,
+        },
+    },
+}

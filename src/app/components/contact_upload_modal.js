@@ -7,8 +7,6 @@ import { MdOutlineFileUpload } from "react-icons/md";
 import { X } from 'lucide-react';
 
 // TODO: Create upload notification (in green)
-// TODO: Files with spaces should be able to be uploaded
-// TODO: Immediate updates on contact column not working yet
 function ContactModal() {
     const fileTypes = ["vcf"];
     const [file, setFile] = useState(null);

@@ -31,7 +31,7 @@ class VcfController < ApplicationController
       end
   
       begin
-        response = RestClient.post('http://127.0.0.1:8000/api/parse-vcf/', { file_name: file.original_filename })
+        response = RestClient.post('http://127.0.0.1:8000/api/parse-vcf/', { file_name: file.original_filename, list_id: list_id})
         parsed_data = JSON.parse(response.body)
 
         Rails.logger.info "Parsed Data: #{response.inspect}"

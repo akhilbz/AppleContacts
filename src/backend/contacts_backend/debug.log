@@ -1,0 +1,12 @@
+
+INFO 2024-05-29 18:37:40,205 views  List List(id=5, name=Temp)
+INFO 2024-05-29 18:37:40,213 views QuerySet:
+INFO 2024-05-29 18:37:40,213 basehttp "POST /api/parse-vcf/ HTTP/1.1" 200 342
+INFO 2024-05-29 18:37:49,033 views QuerySet:
+INFO 2024-05-29 18:37:49,034 basehttp "POST /api/parse-vcf/ HTTP/1.1" 200 82
+INFO 2024-05-29 18:38:54,651 views  List List(id=5, name=Temp)
+INFO 2024-05-29 18:38:54,656 views QuerySet:
+INFO 2024-05-29 18:38:54,656 basehttp "POST /api/parse-vcf/ HTTP/1.1" 200 318
+INFO 2024-05-29 18:39:42,719 views  List List(id=5, name=Temp)
+INFO 2024-05-29 18:39:42,728 views QuerySet:
+INFO 2024-05-29 18:39:42,730 basehttp "POST /api/parse-vcf/ HTTP/1.1" 200 335
