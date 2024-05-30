@@ -22,6 +22,7 @@ export default function Home() {
   const [contacts, setContacts] = useState([]);
   const [contactsLength, setContactsLength] = useState(0);
   const [lists, setLists] = useState([]);
+  const [uploadNotification, setUploadNotification] = useState(false);
   const containerRef = useRef(null);
   const showModal = useSelector(state => state.showModal);
   const uploadAlert = useSelector(state => state.uploadAlert);
@@ -34,7 +35,7 @@ export default function Home() {
       try {
         /* Alerts the useEffect to rerun fetchData and sets to false as upload modal is successful. */
         dispatch(setUploadAlert(false)); 
-        if (uploadAlert) { /* Do Nothing */}
+        if (uploadAlert) { setUploadNotification(true); }
 
         /* Extract List Data */
         const responseLists = await axios.get('http://127.0.0.1:3000/lists/');
@@ -83,6 +84,21 @@ export default function Home() {
     };
     fetchData();
   }, [selectedList, uploadAlert, dispatch]);
+
+  useEffect(() => {
+    let timer;
+    if (uploadNotification) {
+      timer = setTimeout(() => {
+        setUploadNotification(false);
+      }, 3000);
+    }
+
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, [uploadNotification]);
 
   
   const mcHandleMouseDown = (e) => {
@@ -137,13 +153,12 @@ export default function Home() {
   return (
     <main ref={containerRef} className="flex h-screen w-full overflow-hidden p-12"
       onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
-        {/* <div className="fixed left-0 w-full flex justify-center z-10">
-      <div className="mt-[85px] w-fit z-10 flex bg-yellow-300 text-black p-2 rounded-lg shadow-lg space-x-2 items-center">
-        <p className="text-sm font-normal">🚧 Updating the Experience and Projects Section to match my resume. Your patience is appreciated! 🚧</p>
-        <button onClick={() => setShowAlert(false)} className="text-black">&times;</button>
-      </div>
-    </div> */}
-        
+      {uploadNotification && (<div className={`fixed top-1 left-0 w-full flex justify-center z-10`}>
+        <div className="mt-[85px] w-fit z-10 flex bg-green-400 text-black p-2 rounded-lg shadow-lg space-x-2 items-center">
+          <p className="text-sm font-normal">Contacts Uploaded to <span className="font-semibold">{`${lists[selectedList - 1].name}`}</span></p>
+          <button onClick={() => setUploadNotification(false)} className="text-black">&times;</button>
+        </div>  
+      </div>)}
       {showModal && <ContactModal />}
       {showDropUpModal && <DropupModal />}
       {leftWidth != 0 && (<div className="relative bg-[#161616] h-full rounded-l-xl  flex flex-col p-3" style={{ width: `${leftWidth}%`, maxWidth: `20%` }}>
