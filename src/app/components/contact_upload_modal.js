@@ -6,7 +6,6 @@ import { setShowModal, setUploadAlert } from '../action';
 import { MdOutlineFileUpload } from "react-icons/md";
 import { X } from 'lucide-react';
 
-// TODO: Create upload notification (in green)
 function ContactModal() {
     const fileTypes = ["vcf"];
     const [file, setFile] = useState(null);

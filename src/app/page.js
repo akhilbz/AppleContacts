@@ -3,14 +3,14 @@ import axios from "axios";
 import React from 'react';
 import { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { setUploadAlert } from "./action";
+import { setUploadAlert, setLists } from "./action";
 import ListContactCard from "./components/list_contact_card";
 import ListListCard from "./components/list_list_card";
 import ContactCardHeader from "./components/contact_card_header";
 import ContactCard from "./components/contact_card";
 import { IoSearchOutline } from "@react-icons/all-files/io5/IoSearchOutline";
 import ContactModal from "./components/contact_upload_modal";
-import DropupModal from "./components/dropup_modal";
+import ListManagementModal from "./components/list_management_modal";
 import { throttle } from "lodash";
 
 export default function Home() {
@@ -21,13 +21,14 @@ export default function Home() {
   const [rightWidth, setRightWidth] = useState(55); // Initial width in percentage
   const [contacts, setContacts] = useState([]);
   const [contactsLength, setContactsLength] = useState(0);
-  const [lists, setLists] = useState([]);
+  // const [lists, setLists] = useState([]);
   const [uploadNotification, setUploadNotification] = useState(false);
   const containerRef = useRef(null);
   const showModal = useSelector(state => state.showModal);
   const uploadAlert = useSelector(state => state.uploadAlert);
-  const showDropUpModal = useSelector(state => state.showDropUpModal);
+  const showListManagementModal = useSelector(state => state.showListManagementModal);
   const selectedList = useSelector(state => state.selectedList);
+  const lists = useSelector(state => state.lists);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -46,6 +47,7 @@ export default function Home() {
         var size = responseContacts.data.contacts.length;
         console.log(size);
         setContactsLength(size);
+        
         /* Contacts Sorting Algorithm A-Z */
         var all_contacts = [];
         var total = 0;
@@ -76,7 +78,7 @@ export default function Home() {
         /* ^^^^^^^^^^^^^^^^^^^^^^ */
 
         console.log(all_contacts);
-        setLists(responseLists.data.list);
+        dispatch(setLists(responseLists.data.list));
         setContacts(all_contacts);
       } catch (e) {
         console.log('Error fetching data');
@@ -90,7 +92,7 @@ export default function Home() {
     if (uploadNotification) {
       timer = setTimeout(() => {
         setUploadNotification(false);
-      }, 3000);
+      }, 4000);
     }
 
     return () => {
@@ -160,7 +162,7 @@ export default function Home() {
         </div>  
       </div>)}
       {showModal && <ContactModal />}
-      {showDropUpModal && <DropupModal />}
+      {(showListManagementModal === 1 || showListManagementModal === 2) && <ListManagementModal />}
       {leftWidth != 0 && (<div className="relative bg-[#161616] h-full rounded-l-xl  flex flex-col p-3" style={{ width: `${leftWidth}%`, maxWidth: `20%` }}>
         <div className="flex w-full h-fit justify-between border-b-[1px] border-[#2f2f2f] pb-3">
           <h1 className="text-center font-bold text-4xl ml-4 text-[#d4d4d4]">Lists</h1>

@@ -6,7 +6,7 @@ const initialState = {
     selectedContact: 0,
     selectedList: 1,
     showModal: false,
-    showDropUpModal: false,
+    showListManagementModal: 0, // 0: Default, 1: New List, 2: Empty List
     showDropUp: false,
     uploadAlert: false,
   };
@@ -16,14 +16,16 @@ const initialState = {
     switch (action.type) {
         case 'SET_CONTACT_INFO':
             return { ...state, contactInfo: [...action.payload] };
+        case 'SET_LISTS':
+            return { ...state, lists: [...action.payload] };
         case 'SET_SELECTED_CONTACT':
             return { ...state, selectedContact: action.payload };
         case 'SET_SELECTED_LIST':
             return { ...state, selectedList: action.payload };
         case 'SET_SHOW_MODAL':
             return { ...state, showModal: action.payload };
-        case 'SET_SHOW_DROPUP_MODAL':
-            return { ...state, showDropUpModal: action.payload };
+        case 'SET_SHOW_LIST_MANAGEMENT_MODAL':
+            return { ...state, showListManagementModal: action.payload };
         case 'SET_SHOW_DROP_UP':
             return { ...state, showDropUp: action.payload };
         case 'SET_UPLOAD_ALERT':

@@ -1,5 +1,6 @@
 class ListsController < ApplicationController
-    
+    before_action :set_list, only: [:show, :empty]
+
     def index
         @list = List.all
         render json: {
@@ -18,7 +19,7 @@ class ListsController < ApplicationController
     end
 
     def show
-        @list = List.find(params[:id])
+        # @list = List.find(params[:id])
         @contacts = @list.contacts
 
         render json: {
@@ -27,7 +28,19 @@ class ListsController < ApplicationController
         }
     end
 
+    def empty
+        ListContact.where(list_id: @list.id).destroy_all
+        render json: { message: 'List Cleared Successfully' }, status: :ok
+    rescue => e
+        render json: { error: e.message }, status: :unprocessable_entity
+    end
+        
     private 
+
+    def set_list
+        @list = List.find(params[:id])
+    end
+      
     def list_params
         params.require(:list).permit(:name)
     end

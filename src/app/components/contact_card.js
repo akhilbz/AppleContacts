@@ -61,9 +61,10 @@ const ContactCard = ({ contactsLength, listsColumnWidth, setListsColumnWidth }) 
             emails = contactInfo[0].email;
 
             // Photo Path Extraction:
-            photoPath = contactInfo[0].photo_path;
+            // photoPath = "file://" + contactInfo[0].photo_path;
+            photoPath = "file:///Users/akhileshbitla/Work/projects/contacts/src/photo_storage/akhilesh.jpeg"
         }
-        // console.log(photoPath);
+        console.log(photoPath);
         if (contactInfo.length != 0) setContact(contactInfo);
         setFullName(name);
         setCompany(company);
@@ -83,7 +84,7 @@ const ContactCard = ({ contactsLength, listsColumnWidth, setListsColumnWidth }) 
    (<div className='flex flex-col overflow-y-auto w-full h-fit space-y-4'>
        <div className='flex w-full items-center space-x-6 justify-between pb-6'> 
             <div className=' w-28 h-28  bg-gray-200 rounded-full overflow-hidden flex items-center justify-center'>
-                {/* <img src={photoPath} alt="Profile" className="w-full h-full object-cover" /> */}
+                <img src={photoPath} alt="Profile" className="w-full h-full object-cover" />
             </div>
 
             <div className='flex-1 border-b-4 pb-4'> 
