@@ -136,37 +136,40 @@ def parsed_vcf(request):
         phone_no = store_telephone_nos(tel_nos)
         company = vcard.org.value[0] if hasattr(vcard, 'org') else ''
         logger.info(" List %s", list_instance)
+        
         try:
-            existing_contact = ListContact.objects.filter(
-                Q(list=list_instance) & 
-                Q(contact__email=email_data) &
-                Q(contact__phone_no=phone_no))
+            if email_data is not None and phone_no is not None:
+                existing_contact = ListContact.objects.filter(
+                    Q(list=list_instance) & 
+                    Q(contact__email=email_data) &
+                    Q(contact__phone_no=phone_no))
             
-            for list_contact in existing_contact:
-                contact = list_contact.contact
-                logger.info(
-                    "Existing Contact - Full Name: %s, Company: %s, Photo Path: %s, Email: %s, Phone No: %s",
-                    contact.full_name,
-                    contact.company,
-                    contact.photo_path,
-                    contact.email,
-                    contact.phone_no
-                )
+                for list_contact in existing_contact:
+                    contact = list_contact.contact
+                    logger.info(
+                        "Existing Contact - Full Name: %s, Company: %s, Photo Path: %s, Email: %s, Phone No: %s",
+                        contact.full_name,
+                        contact.company,
+                        contact.photo_path,
+                        contact.email,
+                        contact.phone_no
+                    )
 
-            if not existing_contact.exists():
-                contact = Contact(
-                    full_name=fn_list,
-                    photo_path=photo_path,
-                    email=email_data,
-                    phone_no=phone_no,
-                    company=company)
-                contact.save()
-                contacts_data.append(contact)
+                if not existing_contact.exists():
+                    contact = Contact(
+                        full_name=fn_list,
+                        photo_path=photo_path,
+                        email=email_data,
+                        phone_no=phone_no,
+                        company=company)
+                    contact.save()
+                    contacts_data.append(contact)
+                    ListContact.objects.create(list=list_instance, contact=contact)
+                # TODO: Duplicate detection logic
                 
-                
-            ListContact.objects.create(list=list_instance, contact=contact)
         except Exception as e:
             errors.append(f"Failed to process contact {fn}: {str(e)}")
+            logger.error("Failed to process contact %s: %s", fn, e, exc_info=True)
 
     if errors:
         return JsonResponse({"success": False, "errors": errors}, status=500)

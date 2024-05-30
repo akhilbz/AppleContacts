@@ -37,7 +37,7 @@ class VcfController < ApplicationController
         Rails.logger.info "Parsed Data: #{response.inspect}"
         puts "Parsed Data: #{parsed_data.inspect}"
 
-        map_contacts_to_list(parsed_data['contacts'], list_id)
+        # map_contacts_to_list(parsed_data['contacts'], list_id)
   
         render json: { message: 'File processed and mapped successfully', data: parsed_data['contacts'] }, status: :ok
       rescue RestClient::ExceptionWithResponse => e

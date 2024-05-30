@@ -39,6 +39,7 @@ function ContactModal() {
         })
         .then(response => {
           console.log('File uploaded successfully:', response.data);
+          dispatch(setUploadAlert(true));
         })
         .catch(error => {
           console.error('Error uploading file:', error);
@@ -74,7 +75,7 @@ function ContactModal() {
                 <div className='flex flex-row w-[full] justify-evenly items-center h-[15%] bg-[#111111] rounded-xl mx-5'>
                     <h1 className={`text-[#343434] ${incorrectFileAlert ? "text-[#e63946]" : "text-[#343434]"} text-xl`}>{`Uploaded File: ${ incorrectFileAlert ? "Incorrect File Type - Must Use (.vcf)" : file ? file.name : "No File Uploaded"}`}</h1>
                     <button disabled={!file} className={`w-fit p-2 ${file ? 'bg-[#545454] text-[#141414] cursor-pointer' : 'bg-[#4a4a4a] text-[#242424] cursor-default'}  rounded-lg flex justify-center items-center cursor-pointer`}
-                    onClick={() => { handleSubmit(); dispatch(setShowModal(false)); dispatch(setUploadAlert(true));}}>
+                    onClick={() => { handleSubmit(); dispatch(setShowModal(false));}}>
                         <h1 className='text-center'>Extract Contacts</h1>
                     </button>
                 </div>
