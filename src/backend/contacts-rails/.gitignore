@@ -30,6 +30,6 @@
 !/tmp/storage/.keep
 
 /public/assets
-
+/Users/akhileshbitla/Work/projects/contacts/src/backend/contacts_backend/debug.log
 # Ignore master key for decrypting credentials and more.
 /config/master.key
