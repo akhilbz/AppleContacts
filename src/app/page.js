@@ -3,7 +3,7 @@ import axios from "axios";
 import React from 'react';
 import { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { setUploadAlert, setLists } from "./action";
+import { setUploadAlert, setLists, setContactsLength } from "./action";
 import ListContactCard from "./components/list_contact_card";
 import ListListCard from "./components/list_list_card";
 import ContactCardHeader from "./components/contact_card_header";
@@ -20,8 +20,6 @@ export default function Home() {
   const [leftWidth, setLeftWidth] = useState(20); // Initial width in percentage
   const [rightWidth, setRightWidth] = useState(55); // Initial width in percentage
   const [contacts, setContacts] = useState([]);
-  const [contactsLength, setContactsLength] = useState(0);
-  // const [lists, setLists] = useState([]);
   const [uploadNotification, setUploadNotification] = useState(false);
   const containerRef = useRef(null);
   const showModal = useSelector(state => state.showModal);
@@ -33,59 +31,63 @@ export default function Home() {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        /* Alerts the useEffect to rerun fetchData and sets to false as upload modal is successful. */
-        dispatch(setUploadAlert(false)); 
-        if (uploadAlert) { setUploadNotification(true); }
+      if (selectedList >= 0) {
+        try {
+          /* Alerts the useEffect to rerun fetchData and sets to false as upload modal is successful. */
+          if (uploadAlert) { setUploadNotification(true); }
 
-        /* Extract List Data */
-        const responseLists = await axios.get('http://127.0.0.1:3000/lists/');
-        console.log(responseLists.data.list)
+          /* Extract List Data */
+          const responseLists = await axios.get('http://127.0.0.1:3000/lists/');
+          console.log("Testing", uploadAlert, "Testing ", responseLists.data.list);
+          // console.log(responseLists.data.list[selectedList - 1].id)
+          console.log(selectedList);
+          const selectedListId = responseLists.data.list[selectedList].id;
+          /* Extract Corresponding Contacts Data */
+          const responseContacts = await axios.get(`http://127.0.0.1:3000/lists/${selectedListId}`);
+          // console.log(responseContacts.data);
+          var size = responseContacts.data.contacts.length;
+          // console.log(size);
+          dispatch(setContactsLength(size));
+          dispatch(setUploadAlert(false)); 
+          /* Contacts Sorting Algorithm A-Z */
+          var all_contacts = [];
+          var total = 0;
+          for (var c = 'a'.charCodeAt(0); c <= 'z'.charCodeAt(0); c++) {
+            var sorted_contacts = [];
+            for (var j = 0; j < size; j++) {
+              const contact = responseContacts.data.contacts[j].full_name;
+              if (String.fromCharCode(c) == contact[contact.length - 1].toLowerCase().charAt(0)) {
+                sorted_contacts.push(responseContacts.data.contacts[j]);
+              }
+            }
+            all_contacts.push({ [String.fromCharCode(c).toUpperCase()]: sorted_contacts });
+            total += sorted_contacts.length;
+          }
 
-         /* Extract Corresponding Contacts Data */
-        const responseContacts = await axios.get(`http://127.0.0.1:3000/lists/${selectedList}`);
-        var size = responseContacts.data.contacts.length;
-        console.log(size);
-        setContactsLength(size);
-        
-        /* Contacts Sorting Algorithm A-Z */
-        var all_contacts = [];
-        var total = 0;
-        for (var c = 'a'.charCodeAt(0); c <= 'z'.charCodeAt(0); c++) {
-          var sorted_contacts = [];
-          for (var j = 0; j < size; j++) {
-            const contact = responseContacts.data.contacts[j].full_name;
-            if (String.fromCharCode(c) == contact[contact.length - 1].toLowerCase().charAt(0)) {
-              sorted_contacts.push(responseContacts.data.contacts[j]);
+          var leftover_contacts = [];
+          for (var k = 0; k < size; k++) {
+            const contact = responseContacts.data.contacts[k].full_name;
+            if (contact[contact.length - 1] == '' || (contact[contact.length - 1].toLowerCase().charAt(0) < 'a'.charCodeAt(0)) 
+            || (contact[contact.length - 1].toLowerCase().charAt(0) > 'z'.charCodeAt(0)) 
+            || contact[contact.length - 1].toLowerCase().charAt(0) == '(') {
+              leftover_contacts.push(responseContacts.data.contacts[k]);
             }
           }
-          all_contacts.push({ [String.fromCharCode(c).toUpperCase()]: sorted_contacts });
-          total += sorted_contacts.length;
+
+          all_contacts.push({ 'OTHER': leftover_contacts });
+          total += leftover_contacts.length;
+          /* ^^^^^^^^^^^^^^^^^^^^^^ */
+
+          // console.log(all_contacts);
+          dispatch(setLists(responseLists.data.list));
+          setContacts(all_contacts);
+        } catch (e) {
+          console.log('Error fetching data');
         }
-
-        var leftover_contacts = [];
-        for (var k = 0; k < size; k++) {
-          const contact = responseContacts.data.contacts[k].full_name;
-          if (contact[contact.length - 1] == '' || (contact[contact.length - 1].toLowerCase().charAt(0) < 'a'.charCodeAt(0)) 
-          || (contact[contact.length - 1].toLowerCase().charAt(0) > 'z'.charCodeAt(0)) 
-          || contact[contact.length - 1].toLowerCase().charAt(0) == '(') {
-            leftover_contacts.push(responseContacts.data.contacts[k]);
-          }
-        }
-
-        all_contacts.push({ 'OTHER': leftover_contacts });
-        total += leftover_contacts.length;
-        /* ^^^^^^^^^^^^^^^^^^^^^^ */
-
-        console.log(all_contacts);
-        dispatch(setLists(responseLists.data.list));
-        setContacts(all_contacts);
-      } catch (e) {
-        console.log('Error fetching data');
       }
     };
     fetchData();
-  }, [selectedList, uploadAlert, dispatch]);
+  }, [selectedList, uploadAlert, dispatch, axios]);
 
   useEffect(() => {
     let timer;
@@ -157,12 +159,12 @@ export default function Home() {
       onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
       {uploadNotification && (<div className={`fixed top-1 left-0 w-full flex justify-center z-10`}>
         <div className="mt-[85px] w-fit z-10 flex bg-green-400 text-black p-2 rounded-lg shadow-lg space-x-2 items-center">
-          <p className="text-sm font-normal">Contacts Uploaded to <span className="font-semibold">{`${lists[selectedList - 1].name}`}</span></p>
+          <p className="text-sm font-normal">Contacts Uploaded to <span className="font-semibold">{`${lists[selectedList].name}`}</span></p>
           <button onClick={() => setUploadNotification(false)} className="text-black">&times;</button>
         </div>  
       </div>)}
       {showModal && <ContactModal />}
-      {(showListManagementModal === 1 || showListManagementModal === 2) && <ListManagementModal />}
+      {([1, 2, 3].includes(showListManagementModal)) && <ListManagementModal />}
       {leftWidth != 0 && (<div className="relative bg-[#161616] h-full rounded-l-xl  flex flex-col p-3" style={{ width: `${leftWidth}%`, maxWidth: `20%` }}>
         <div className="flex w-full h-fit justify-between border-b-[1px] border-[#2f2f2f] pb-3">
           <h1 className="text-center font-bold text-4xl ml-4 text-[#d4d4d4]">Lists</h1>
@@ -212,7 +214,7 @@ export default function Home() {
           {/* Contact Info Container */}
           <div style={{ width: `${rightWidth - middleWidth}%`, minWidth: `60%` }}
             className="bg-[#212121] flex-grow rounded-r-xl p-12">
-            <ContactCard contactsLength={contactsLength} listsColumnWidth={leftWidth} setListsColumnWidth={setLeftWidth} />
+            <ContactCard listsColumnWidth={leftWidth} setListsColumnWidth={setLeftWidth} />
           </div>
         </div>
       </div>

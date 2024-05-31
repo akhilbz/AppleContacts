@@ -4,9 +4,10 @@ import { IoAddOutline } from "@react-icons/all-files/io5/IoAddOutline";
 import { setShowDropUp } from '../action';
 import ContactCardDropUp from './contact_card_dropup';
 
-const ContactCard = ({ contactsLength, listsColumnWidth, setListsColumnWidth }) => {
+const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
     const dispatch = useDispatch();
     const contactInfo = useSelector(state => state.contactInfo);
+    const contactsLength = useSelector(state => state.contactsLength);
     const showDropUp = useSelector(state => state.showDropUp);
     const [contact, setContact] = useState(null);
     const [fullName, setFullName] = useState("");
@@ -32,7 +33,7 @@ const ContactCard = ({ contactsLength, listsColumnWidth, setListsColumnWidth }) 
         document.removeEventListener('mousedown', handleClickOutside);
     };
     }, [showDropUp]);
-    console.log(contactInfo);
+    // console.log(contactInfo);
     useEffect(() => {
         let name = "";
         let company = "";
@@ -64,7 +65,7 @@ const ContactCard = ({ contactsLength, listsColumnWidth, setListsColumnWidth }) 
             // photoPath = "file://" + contactInfo[0].photo_path;
             photoPath = "file:///Users/akhileshbitla/Work/projects/contacts/src/photo_storage/akhilesh.jpeg"
         }
-        console.log(photoPath);
+        // console.log(photoPath);
         if (contactInfo.length != 0) setContact(contactInfo);
         setFullName(name);
         setCompany(company);
@@ -72,7 +73,7 @@ const ContactCard = ({ contactsLength, listsColumnWidth, setListsColumnWidth }) 
         setEmails(emails);
         setPhotoPath(photoPath);
     }, [contactInfo]);
-    console.log(contactsLength);
+    // console.log(contactsLength);
    return (
     <section className='flex flex-col w-full h-full'>
     {(contactsLength == 0 || contact == null) && 

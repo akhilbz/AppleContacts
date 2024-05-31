@@ -12,7 +12,7 @@ function ContactModal() {
     const [incorrectFileAlert, setIncorrectFileAlert] = useState(false);
     const dispatch = useDispatch();
     const selectedList = useSelector(state => state.selectedList);
-
+    const lists = useSelector(state => state.lists);
     const handleChange = (file) => {
         if (file?.name.split('.').pop() === "vcf") {
             setIncorrectFileAlert(false);
@@ -29,7 +29,7 @@ function ContactModal() {
         console.log(file.path);
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('id', selectedList);
+        formData.append('id', lists[selectedList].id);
     
         axios.post('http://127.0.0.1:3000/upload-vcf', formData, {
           headers: {

@@ -1,5 +1,5 @@
 class Contact < ApplicationRecord
-  has_many :list_contacts
+  has_many :list_contacts, dependent: :destroy
   has_many :lists, through: :list_contacts
   
   self.table_name = 'contacts_contact'

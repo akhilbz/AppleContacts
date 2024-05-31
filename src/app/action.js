@@ -1,11 +1,13 @@
 // action types
 export const SET_CONTACT_INFO = 'SET_CONTACT_INFO';
 export const SET_LISTS = 'SET_LISTS';
+export const SET_CONTACTS_LENGTH = 'SET_CONTACTS_LENGTH';
 export const SET_SELECTED_CONTACT = 'SET_SELECTED_CONTACT';
 export const SET_SHOW_MODAL = 'SET_SHOW_MODAL';
 export const SET_SHOW_LIST_MANAGEMENT_MODAL = 'SET_SHOW_LIST_MANAGEMENT_MODAL';
 export const SET_SHOW_DROP_UP = 'SET_SHOW_DROP_UP';
 export const SET_SELECTED_LIST = 'SET_SELECTED_LIST';
+export const SET_DELETED_LIST = 'SET_DELETED_LIST';
 export const SET_UPLOAD_ALERT = 'SET_UPLOAD_ALERT';
 
 // action creators
@@ -19,6 +21,11 @@ export const setLists = (lists) => ({
     payload: lists
 });
 
+export const setContactsLength = (contactsLength) => ({
+    type: SET_CONTACTS_LENGTH,
+    payload: contactsLength
+});
+
 export const setSelectedContact = (selectedContact) => ({
     type: SET_SELECTED_CONTACT,
     payload: selectedContact
@@ -27,6 +34,11 @@ export const setSelectedContact = (selectedContact) => ({
 export const setSelectedList = (selectedList) => ({
     type: SET_SELECTED_LIST,
     payload: selectedList
+});
+
+export const setDeletedList = (deletedList) => ({
+    type: SET_DELETED_LIST,
+    payload: deletedList
 });
 
 export const setShowModal = (showModal) => ({

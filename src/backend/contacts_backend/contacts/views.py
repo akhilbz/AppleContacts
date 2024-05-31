@@ -108,12 +108,13 @@ def parsed_vcf(request):
         file_name = request.POST.get('file_name')
         list_id = request.POST.get('list_id')
         file_path = os.path.join(config('VCF_FILE_PATH'), file_name)
-
-    file_content = read_and_convert_vcf_to_string(file_path)
-    errors = []
-    contacts_data = []
+        # logger.info(" List ID %s File Name %s File Path %s", list_id, file_name, file_path)
     
-    list_instance = List.objects.get(id=list_id)
+        file_content = read_and_convert_vcf_to_string(file_path)
+        errors = []
+        contacts_data = []
+        
+        list_instance = List.objects.get(id=list_id)
     # list_contacts = ListContact.objects.filter(
     #             Q(list=list_instance) &
     #             Q(contact__full_name=fn_list) & 
@@ -123,58 +124,58 @@ def parsed_vcf(request):
     #             Q(contact__phone_no=phone_no))
     # logger.info("List Contact: %s", list(list_contacts))
     
-    for v_card_content in file_content:
-        vcard = vobject.readOne( v_card_content )
-        fn = vcard.fn.value if hasattr(vcard, 'fn') else ''
-        tel_nos = vcard.tel_list if hasattr(vcard, 'tel') else []
-        emails = vcard.email_list if hasattr(vcard, 'email') else []
-        photo_data = vcard.photo.value if hasattr(vcard, 'photo') else ''
-        
-        fn_list = store_full_name_as_list(fn)
-        photo_path = extract_and_save_image(photo_data, fn_list[0].lower(), config('PHOTO_FOLDER_PATH'))
-        email_data = store_emails(emails)
-        phone_no = store_telephone_nos(tel_nos)
-        company = vcard.org.value[0] if hasattr(vcard, 'org') else ''
-        logger.info(" List %s", list_instance)
-        
-        try:
-            if email_data is not None and phone_no is not None:
-                existing_contact = ListContact.objects.filter(
-                    Q(list=list_instance) & 
-                    Q(contact__email=email_data) &
-                    Q(contact__phone_no=phone_no))
+        for v_card_content in file_content:
+            vcard = vobject.readOne( v_card_content )
+            fn = vcard.fn.value if hasattr(vcard, 'fn') else ''
+            tel_nos = vcard.tel_list if hasattr(vcard, 'tel') else []
+            emails = vcard.email_list if hasattr(vcard, 'email') else []
+            photo_data = vcard.photo.value if hasattr(vcard, 'photo') else ''
             
-                for list_contact in existing_contact:
-                    contact = list_contact.contact
-                    logger.info(
-                        "Existing Contact - Full Name: %s, Company: %s, Photo Path: %s, Email: %s, Phone No: %s",
-                        contact.full_name,
-                        contact.company,
-                        contact.photo_path,
-                        contact.email,
-                        contact.phone_no
-                    )
-
-                if not existing_contact.exists():
-                    contact = Contact(
-                        full_name=fn_list,
-                        photo_path=photo_path,
-                        email=email_data,
-                        phone_no=phone_no,
-                        company=company)
-                    contact.save()
-                    contacts_data.append(contact)
-                    ListContact.objects.create(list=list_instance, contact=contact)
-                # TODO: Duplicate detection logic
+            fn_list = store_full_name_as_list(fn)
+            photo_path = extract_and_save_image(photo_data, fn_list[0].lower(), config('PHOTO_FOLDER_PATH'))
+            email_data = store_emails(emails)
+            phone_no = store_telephone_nos(tel_nos)
+            company = vcard.org.value[0] if hasattr(vcard, 'org') else ''
+            logger.info(" List %s", list_instance)
+            
+            try:
+                if email_data is not None and phone_no is not None:
+                    existing_contact = ListContact.objects.filter(
+                        Q(list=list_instance) & 
+                        Q(contact__email=email_data) &
+                        Q(contact__phone_no=phone_no))
                 
-        except Exception as e:
-            errors.append(f"Failed to process contact {fn}: {str(e)}")
-            logger.error("Failed to process contact %s: %s", fn, e, exc_info=True)
+                    for list_contact in existing_contact:
+                        contact = list_contact.contact
+                        logger.info(
+                            "Existing Contact - Full Name: %s, Company: %s, Photo Path: %s, Email: %s, Phone No: %s",
+                            contact.full_name,
+                            contact.company,
+                            contact.photo_path,
+                            contact.email,
+                            contact.phone_no
+                        )
 
-    if errors:
-        return JsonResponse({"success": False, "errors": errors}, status=500)
-    
-    serialized_contacts = ContactSerializer(contacts_data, many=True).data
-    logger.info("QuerySet:")
-    
-    return JsonResponse({"success": True, "message": "All contacts imported successfully", "contacts": serialized_contacts})
+                    if not existing_contact.exists():
+                        contact = Contact(
+                            full_name=fn_list,
+                            photo_path=photo_path,
+                            email=email_data,
+                            phone_no=phone_no,
+                            company=company)
+                        contact.save()
+                        contacts_data.append(contact)
+                        ListContact.objects.create(list=list_instance, contact=contact)
+                    # TODO: Duplicate detection logic
+                
+            except Exception as e:
+                errors.append(f"Failed to process contact {fn}: {str(e)}")
+                logger.error("Failed to process contact %s: %s", fn, e, exc_info=True)
+
+        if errors:
+            return JsonResponse({"success": False, "errors": errors}, status=500)
+        
+        serialized_contacts = ContactSerializer(contacts_data, many=True).data
+        logger.info("QuerySet:")
+        
+        return JsonResponse({"success": True, "message": "All contacts imported successfully", "contacts": serialized_contacts})
