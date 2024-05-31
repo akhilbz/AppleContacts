@@ -29,26 +29,38 @@ export default function Home() {
   const lists = useSelector(state => state.lists);
   const dispatch = useDispatch();
 
+  // TODO: Add an Activity Indicator for Uploading Contacts
   useEffect(() => {
+    /* Alerts the useEffect to rerun fetchData and sets to false as upload modal is successful. */
+    
     const fetchData = async () => {
-      if (selectedList >= 0) {
-        try {
-          /* Alerts the useEffect to rerun fetchData and sets to false as upload modal is successful. */
-          if (uploadAlert) { setUploadNotification(true); }
-
-          /* Extract List Data */
-          const responseLists = await axios.get('http://127.0.0.1:3000/lists/');
-          console.log("Testing", uploadAlert, "Testing ", responseLists.data.list);
-          // console.log(responseLists.data.list[selectedList - 1].id)
-          console.log(selectedList);
-          const selectedListId = responseLists.data.list[selectedList].id;
+      if (uploadAlert) {
+        setUploadNotification(true);
+      }
+      try {
+        /* Extract List Data */
+        const responseLists = await axios.get('http://127.0.0.1:3000/lists/');
+        const listsData = responseLists.data.list;
+        dispatch(setLists(listsData));
+        console.log(listsData.length);
+        console.log(selectedList);
+  
+        if (listsData.length === 0) {
+          // No lists available, handle the empty state
+          dispatch(setContactsLength(0));
+          setContacts([]);
+          dispatch(setUploadAlert(false));
+          return;
+        }
+  
+        if (selectedList >= 0 && selectedList < listsData.length) {
+          const selectedListId = listsData[selectedList].id;
           /* Extract Corresponding Contacts Data */
           const responseContacts = await axios.get(`http://127.0.0.1:3000/lists/${selectedListId}`);
-          // console.log(responseContacts.data);
           var size = responseContacts.data.contacts.length;
-          // console.log(size);
           dispatch(setContactsLength(size));
           dispatch(setUploadAlert(false)); 
+  
           /* Contacts Sorting Algorithm A-Z */
           var all_contacts = [];
           var total = 0;
@@ -63,7 +75,7 @@ export default function Home() {
             all_contacts.push({ [String.fromCharCode(c).toUpperCase()]: sorted_contacts });
             total += sorted_contacts.length;
           }
-
+  
           var leftover_contacts = [];
           for (var k = 0; k < size; k++) {
             const contact = responseContacts.data.contacts[k].full_name;
@@ -73,21 +85,25 @@ export default function Home() {
               leftover_contacts.push(responseContacts.data.contacts[k]);
             }
           }
-
+  
           all_contacts.push({ 'OTHER': leftover_contacts });
           total += leftover_contacts.length;
           /* ^^^^^^^^^^^^^^^^^^^^^^ */
-
-          // console.log(all_contacts);
-          dispatch(setLists(responseLists.data.list));
           setContacts(all_contacts);
-        } catch (e) {
-          console.log('Error fetching data');
+        } else {
+          // Handle case where selectedList index is out of bounds
+          dispatch(setContactsLength(0));
+          setContacts([]);
         }
+      } catch (e) {
+        console.log('Error fetching data: ', e.message);
       }
     };
+    
     fetchData();
-  }, [selectedList, uploadAlert, dispatch, axios]);
+  }, [selectedList, uploadAlert, dispatch]);
+  
+  
 
   useEffect(() => {
     let timer;
@@ -159,7 +175,7 @@ export default function Home() {
       onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
       {uploadNotification && (<div className={`fixed top-1 left-0 w-full flex justify-center z-10`}>
         <div className="mt-[85px] w-fit z-10 flex bg-green-400 text-black p-2 rounded-lg shadow-lg space-x-2 items-center">
-          <p className="text-sm font-normal">Contacts Uploaded to <span className="font-semibold">{`${lists[selectedList].name}`}</span></p>
+          { selectedList >= 0 && (<p className="text-sm font-normal">Contacts Uploaded to <span className="font-semibold">{`${lists[selectedList]?.name}`}</span></p>)}
           <button onClick={() => setUploadNotification(false)} className="text-black">&times;</button>
         </div>  
       </div>)}

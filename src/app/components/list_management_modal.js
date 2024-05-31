@@ -22,8 +22,9 @@ function ListManagementModal() {
             { headers: { 'Content-Type': 'application/json' }});
             if (response.status === 201) { 
                 setListName(''); 
+                dispatch(setUploadAlert(true));
                 dispatch(setShowListManagementModal(0));
-                dispatch(setSelectedList(lists.length));
+                dispatch(setSelectedList(selectedList < 0 ? 0 : lists.length));
             } else {
                 console.error('Error creating list:', response.data);
             }
@@ -65,7 +66,7 @@ function ListManagementModal() {
             if (responseDeleteList.status === 200) {
                 console.log("test");
                 dispatch(setUploadAlert(true));
-                dispatch(setSelectedList(selectedList - 1));
+                dispatch(setSelectedList((selectedList - 1) < 0 ? selectedList : selectedList - 1));
                 dispatch(setShowListManagementModal(0));
             } else {
                 console.error("Failed to delete selected list: ", responseDeleteList.data);
@@ -79,8 +80,8 @@ function ListManagementModal() {
         <div className='fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-20 flex flex-col justify-center items-center'>
             <div className={`w-[50%] ${[2, 3].includes(showListManagementModal) ? "h-[30%]" : "" }  flex flex-col text-white bg-[#141414] rounded-xl p-5 space-y-4`}>
                 <div className="flex flex-row w-full justify-between">
-                    <h1 className=' text-2xl text-[#d4d4d4] font-semibold'>{`${showListManagementModal == 1 ? "Enter List Name" : 
-                    showListManagementModal == 2 ? `Empty ${lists[selectedList - 1].name}` : `Delete ${lists[selectedList - 1].name}`}`}</h1>
+                    {lists.length != 0 && (<h1 className=' text-2xl text-[#d4d4d4] font-semibold'>{`${showListManagementModal == 1 ? "Enter List Name" : 
+                    showListManagementModal == 2 ? `Empty ${lists[selectedList]?.name}` : `Delete ${lists[selectedList]?.name}`}`}</h1>)}
                     <button className='place-self-end' onClick={() => dispatch(setShowListManagementModal(0))}>
                         <X size={30} color='#d4d4d4' />
                     </button>
