@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { IoAddOutline } from "@react-icons/all-files/io5/IoAddOutline"; 
 import { setShowDropUp } from '../action';
 import ContactCardDropUp from './contact_card_dropup';
-
+import EditContactCard from './edit_contact_card';
 const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
     const dispatch = useDispatch();
     const contactInfo = useSelector(state => state.contactInfo);
@@ -15,6 +15,7 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
     const [phoneNo, setPhoneNo] = useState([]);
     const [emails, setEmails] = useState([]);
     const [photoPath, setPhotoPath] = useState("");
+    const [showEdit, setShowEdit] = useState(false);
     const dropUpRef = useRef(null);
 
     const handleClickOutside = (event) => {
@@ -76,75 +77,78 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
     // console.log(contactsLength);
    return (
     <section className='flex flex-col w-full h-full'>
-    {(contactsLength == 0 || contact == null) && 
+    {(contactsLength == 0 || contact == null) && !showEdit && 
     (<div className='flex w-full h-full items-end justify-center '>
         <h1 className='text-[#4a4a4a] font-semibold text-xl'>{ contactsLength == 0 ? "No Cards" : contact == null ? "No Contact Selected" : "No Cards"  }</h1>
     </div>)}
    <div className='flex flex-col w-full h-full justify-between space-y-4 '>
-   {(contactsLength != 0 && contact != null) && 
-   (<div className='flex flex-col overflow-y-auto w-full h-fit text-[#d4d4d4] space-y-4'>
-       <div className='flex w-full items-center space-x-6 justify-between pb-6'> 
-            <div className=' w-28 h-28  bg-gray-200 rounded-full overflow-hidden flex items-center justify-center'>
-                <img src={photoPath} alt="Profile" className="w-full h-full object-cover" />
-            </div>
+   {(contactsLength != 0 && contact != null && !showEdit) && 
+    (<div className='flex flex-col overflow-y-auto w-full h-fit font-light space-y-4'>
+        <div className='flex w-full items-center space-x-6 justify-between pb-6'> 
+                <div className=' w-28 h-28  bg-gray-200 rounded-full overflow-hidden flex items-center justify-center'>
+                    <img src={photoPath} alt="Profile" className="w-full h-full object-cover" />
+                </div>
 
-            <div className='flex-1 border-b-[1px] border-[#7c7c7c] pb-2'> 
-                <h1 className='text-4xl text-right font-light'>{ fullName }</h1>
+                <div className='flex-1 border-b-[1px] border-[#7c7c7c] pb-2'> 
+                    <h1 className='text-4xl text-right text-[#d4d4d4]'>{ fullName }</h1>
+                </div>
             </div>
-        </div>
-        {company && (<div className='flex w-full border-b-[1px] border-[#7c7c7c] pb-2 items-center px-5 justify-between'>
-            <div className='flex'>
-                <h1 className='text-xl'>company</h1>
-            </div>
-            <div className='flex'> 
-                <h1 className='text-xl text-right'>{ company }</h1>
-            </div>
+            {company && (<div className='flex w-full border-b-[1px] text-[#cdcdcd] border-[#7c7c7c] pb-1 items-center px-5 justify-between'>
+                <div className='flex'>
+                    <h1 className='text-xl'>company</h1>
+                </div>
+                <div className='flex'> 
+                    <h1 className='text-xl text-right'>{ company }</h1>
+                </div>
+            </div>)}
+            {phoneNo.length != 0 && (<> 
+            {phoneNo['pref'].length > 0 && (<div className='flex w-full items-center text-[#cdcdcd] border-b-[1px] border-[#7c7c7c] pb-1 justify-between px-5'> 
+                <div className='flex'>
+                    <h1 className='text-xl'>phone</h1>
+                </div>
+                <div className='flex'> 
+                    <h1 className='text-xl text-right truncate'>{phoneNo['pref']}</h1>
+                </div>
+            </div>)}
+            {phoneNo['cell'].length > 0 && (<div className='flex w-full items-center text-[#cdcdcd] border-b-[1px] border-[#7c7c7c] pb-1 justify-between px-5'> 
+                <div className='flex'>
+                    <h1 className='text-xl'>cell</h1>
+                </div>
+                <div className='flex'> 
+                    <h1 className='text-xl text-right truncate'>{phoneNo['cell'][0]}</h1>
+                </div>
+            </div>)}
+            {phoneNo['home'].length > 0 && (<div className='flex w-full items-center text-[#cdcdcd] border-b-[1px] border-[#7c7c7c] pb-1 justify-between px-5'> 
+                <div className='flex'>
+                    <h1 className='text-xl'>home</h1>
+                </div>
+                <div className='flex'> 
+                    <h1 className='text-xl text-right truncate'>{phoneNo['home']}</h1>
+                </div>
+            </div>)}
+            </>) }
+            {emails.length != 0 && (
+                <> {emails['home'].length > 0 && (<div className='flex w-full items-center text-[#cdcdcd] border-b-[1px] border-[#7c7c7c] pb-1 justify-between px-5'> 
+                <div className='flex'>
+                    <h1 className='text-xl'>email</h1>
+                </div>
+                <div className='flex'> 
+                    <h1 className='text-xl text-right truncate'>{emails['home']}</h1>
+                </div>
+            </div>)}
+            {emails['internet'].length > 0 && (<div className='flex w-full items-center text-[#cdcdcd] border-b-[1px] border-[#7c7c7c] pb-1 justify-between px-5'> 
+                <div className='flex'>
+                    <h1 className='text-xl'>other</h1>
+                </div>
+                <div className='flex'> 
+                    <h1 className='text-xl text-right truncate'>{emails['internet']}</h1>
+                </div>
+            </div>)}
+            </>)}
         </div>)}
-        {phoneNo.length != 0 && (<> 
-        {phoneNo['pref'].length > 0 && (<div className='flex w-full items-center border-b-[1px] border-[#7c7c7c] justify-between px-5'> 
-            <div className='flex'>
-                <h1 className='text-xl'>phone</h1>
-            </div>
-            <div className='flex'> 
-                <h1 className='text-xl text-right truncate'>{phoneNo['pref']}</h1>
-            </div>
-        </div>)}
-        {phoneNo['cell'].length > 0 && (<div className='flex w-full items-center border-b-[1px] border-[#7c7c7c] justify-between px-5'> 
-            <div className='flex'>
-                <h1 className='text-xl'>cell</h1>
-            </div>
-            <div className='flex'> 
-                <h1 className='text-xl text-right truncate'>{phoneNo['cell'][0]}</h1>
-            </div>
-        </div>)}
-        {phoneNo['home'].length > 0 && (<div className='flex w-full items-center border-b-[1px] border-[#7c7c7c] justify-between px-5'> 
-            <div className='flex'>
-                <h1 className='text-xl'>home</h1>
-            </div>
-            <div className='flex'> 
-                <h1 className='text-xl text-right truncate'>{phoneNo['home']}</h1>
-            </div>
-        </div>)}
-        </>) }
-        {emails.length != 0 && (
-            <> {emails['home'].length > 0 && (<div className='flex w-full items-center border-b-[1px] border-[#7c7c7c] justify-between px-5'> 
-            <div className='flex'>
-                <h1 className='text-xl'>email</h1>
-            </div>
-            <div className='flex'> 
-                <h1 className='text-xl text-right truncate'>{emails['home']}</h1>
-            </div>
-        </div>)}
-        {emails['internet'].length > 0 && (<div className='flex w-full items-center border-b-[1px] border-[#7c7c7c] justify-between px-5'> 
-            <div className='flex'>
-                <h1 className='text-xl'>other</h1>
-            </div>
-            <div className='flex'> 
-                <h1 className='text-xl text-right truncate'>{emails['internet']}</h1>
-            </div>
-        </div>)}
-        </>)}
-    </div>)}
+        {(contactsLength != 0 && contact != null && showEdit) && 
+        (<EditContactCard fullName={fullName} company={company} phoneNo={phoneNo}
+        photoPath={photoPath} emails={emails} />)}
     </div>
     
     <div className='relative flex w-full justify-between h-11 rounded-xl bg-[#4a4a4a] p-1'>
@@ -156,8 +160,9 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
         <IoAddOutline size={30} color="#9B9B9B"/>
         </div>
         <div className="flex space-x-2">
-        {contact != null && (<div className='h-9 w-fit bg-[#141414] rounded-lg flex justify-center items-center cursor-pointer opacity-1 transition-opacity duration-500'>
-            <h1 className='text-[#9B9B9B] font-normal px-6'>Edit</h1>
+        {contact != null && (<div className='h-9 w-fit bg-[#141414] rounded-lg flex justify-center items-center cursor-pointer opacity-1 transition-opacity duration-500'
+        onClick={() => setShowEdit(!showEdit)}>
+            <h1 className='text-[#9B9B9B] font-normal px-6'>{showEdit ? "Done" : "Edit"}</h1>
         </div>)}
         {listsColumnWidth === 0 && (
             <div className='h-9 w-fit bg-[#141414] rounded-lg flex justify-center items-center cursor-pointer'
