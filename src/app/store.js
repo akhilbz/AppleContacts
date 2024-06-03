@@ -10,7 +10,8 @@ const initialState = {
     showModal: false,
     showListManagementModal: 0, // 0: Default, 1: New List, 2: Empty List, 3: Delete List
     showDropUp: false,
-    uploadAlert: false,
+    uploadAlert: 0,
+    uploadNotification: 0,
   };
   
   const rootReducer = (state = initialState, action) => {
@@ -36,6 +37,8 @@ const initialState = {
             return { ...state, showDropUp: action.payload };
         case 'SET_UPLOAD_ALERT':
             return { ...state, uploadAlert: action.payload };
+        case 'SET_UPLOAD_NOTIFICATION':
+            return { ...state, uploadNotification: action.payload };
       default:
         return state;
     }

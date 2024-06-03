@@ -38,7 +38,7 @@ function ContactModal() {
         })
         .then(response => {
           console.log('File uploaded successfully:', response.data);
-          dispatch(setUploadAlert(true));
+          dispatch(setUploadAlert(4));
         })
         .catch(error => {
           console.error('Error uploading file:', error);
@@ -51,7 +51,7 @@ function ContactModal() {
             <div className="w-[80%] h-[70%] flex flex-col text-white bg-[#141414] rounded-xl p-5">
                 <div className="flex flex-row w-full justify-between">
                     <h1 className=' text-2xl text-[#d4d4d4] font-semibold'>Upload VCF File</h1>
-                    <button className='place-self-end' onClick={() => {dispatch(setShowModal(false)); dispatch(setUploadAlert(false)); }}><X size={30} color='#d4d4d4' /></button>
+                    <button className='place-self-end' onClick={() => {dispatch(setShowModal(false)); dispatch(setUploadAlert(0)); }}><X size={30} color='#d4d4d4' /></button>
                 </div>
                 <div className='p-6 w-full h-full'>
                 <Dropzone onDrop={acceptedFiles => {

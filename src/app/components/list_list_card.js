@@ -13,7 +13,7 @@ const ListListCard = ({  list, list_index }) => {
     try {
         const response = await axios.delete(`http://127.0.0.1:3000/lists/${lists[list_index].id}`)
         if (response.status === 200) {
-            dispatch(setUploadAlert(true));
+            dispatch(setUploadAlert(3));
             dispatch(setSelectedList((selectedList - 1) < 0 ? selectedList : selectedList - 1));
         } else {
             console.log("Failed to delete selected list");

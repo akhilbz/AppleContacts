@@ -9,6 +9,7 @@ export const SET_SHOW_DROP_UP = 'SET_SHOW_DROP_UP';
 export const SET_SELECTED_LIST = 'SET_SELECTED_LIST';
 export const SET_DELETED_LIST = 'SET_DELETED_LIST';
 export const SET_UPLOAD_ALERT = 'SET_UPLOAD_ALERT';
+export const SET_UPLOAD_NOTIFICATION = 'SET_UPLOAD_NOTIFICATION';
 
 // action creators
 export const setContactInfo = (contactInfo) => ({
@@ -59,4 +60,9 @@ export const setShowDropUp = (showDropUp) => ({
 export const setUploadAlert = (uploadAlert) => ({
     type: SET_UPLOAD_ALERT,
     payload: uploadAlert
+});
+
+export const setUploadNotification = (uploadNotification) => ({
+    type: SET_UPLOAD_NOTIFICATION,
+    payload: uploadNotification
 });

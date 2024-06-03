@@ -3,7 +3,7 @@ import axios from "axios";
 import React from 'react';
 import { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { setUploadAlert, setLists, setContactsLength } from "./action";
+import { setUploadAlert, setLists, setContactsLength, setUploadNotification } from "./action";
 import ListContactCard from "./components/list_contact_card";
 import ListListCard from "./components/list_list_card";
 import ContactCardHeader from "./components/contact_card_header";
@@ -11,6 +11,7 @@ import ContactCard from "./components/contact_card";
 import { IoSearchOutline } from "@react-icons/all-files/io5/IoSearchOutline";
 import ContactModal from "./components/contact_upload_modal";
 import ListManagementModal from "./components/list_management_modal";
+import Notifications from "./components/notifications";
 import { throttle } from "lodash";
 
 export default function Home() {
@@ -20,13 +21,13 @@ export default function Home() {
   const [leftWidth, setLeftWidth] = useState(20); // Initial width in percentage
   const [rightWidth, setRightWidth] = useState(55); // Initial width in percentage
   const [contacts, setContacts] = useState([]);
-  const [uploadNotification, setUploadNotification] = useState(false);
   const containerRef = useRef(null);
   const showModal = useSelector(state => state.showModal);
   const uploadAlert = useSelector(state => state.uploadAlert);
   const showListManagementModal = useSelector(state => state.showListManagementModal);
   const selectedList = useSelector(state => state.selectedList);
   const lists = useSelector(state => state.lists);
+  const uploadNotification = useSelector(state => state.uploadNotification);
   const dispatch = useDispatch();
 
   // TODO: Add an Activity Indicator for Uploading Contacts
@@ -34,22 +35,23 @@ export default function Home() {
     /* Alerts the useEffect to rerun fetchData and sets to false as upload modal is successful. */
     
     const fetchData = async () => {
-      if (uploadAlert) {
-        setUploadNotification(true);
+      if (uploadAlert != 0) {
+        dispatch(setUploadNotification(uploadAlert));
       }
+      
       try {
         /* Extract List Data */
         const responseLists = await axios.get('http://127.0.0.1:3000/lists/');
         const listsData = responseLists.data.list;
         dispatch(setLists(listsData));
-        console.log(listsData.length);
-        console.log(selectedList);
+        // console.log(listsData.length);
+        // console.log(selectedList);
   
         if (listsData.length === 0) {
           // No lists available, handle the empty state
           dispatch(setContactsLength(0));
           setContacts([]);
-          dispatch(setUploadAlert(false));
+          dispatch(setUploadAlert(0));
           return;
         }
   
@@ -59,7 +61,7 @@ export default function Home() {
           const responseContacts = await axios.get(`http://127.0.0.1:3000/lists/${selectedListId}`);
           var size = responseContacts.data.contacts.length;
           dispatch(setContactsLength(size));
-          dispatch(setUploadAlert(false)); 
+          dispatch(setUploadAlert(0)); 
   
           /* Contacts Sorting Algorithm A-Z */
           var all_contacts = [];
@@ -103,14 +105,13 @@ export default function Home() {
     fetchData();
   }, [selectedList, uploadAlert, dispatch]);
   
-  
-
   useEffect(() => {
     let timer;
-    if (uploadNotification) {
-      timer = setTimeout(() => {
-        setUploadNotification(false);
-      }, 4000);
+    console.log(uploadNotification != 0);
+    if (uploadNotification !== 0) {
+        timer = setTimeout(() => {
+            dispatch(setUploadNotification(0));
+        }, 4000);
     }
 
     return () => {
@@ -120,7 +121,6 @@ export default function Home() {
     };
   }, [uploadNotification]);
 
-  
   const mcHandleMouseDown = (e) => {
     e.preventDefault();
     setIsMCResizing(true);
@@ -173,12 +173,7 @@ export default function Home() {
   return (
     <main ref={containerRef} className="flex h-screen w-full overflow-hidden p-12"
       onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
-      {uploadNotification && (<div className={`fixed top-1 left-0 w-full flex justify-center z-10`}>
-        <div className="mt-[85px] w-fit z-10 flex bg-green-400 text-black p-2 rounded-lg shadow-lg space-x-2 items-center">
-          { selectedList >= 0 && (<p className="text-sm font-normal">Contacts Uploaded to <span className="font-semibold">{`${lists[selectedList]?.name}`}</span></p>)}
-          <button onClick={() => setUploadNotification(false)} className="text-black">&times;</button>
-        </div>  
-      </div>)}
+      {uploadNotification != 0 && (<Notifications />)}
       {showModal && <ContactModal />}
       {([1, 2, 3].includes(showListManagementModal)) && <ListManagementModal />}
       {leftWidth != 0 && (<div className="relative bg-[#161616] h-full rounded-l-xl  flex flex-col p-3" style={{ width: `${leftWidth}%`, maxWidth: `20%` }}>

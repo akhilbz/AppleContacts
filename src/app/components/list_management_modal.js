@@ -22,7 +22,7 @@ function ListManagementModal() {
             { headers: { 'Content-Type': 'application/json' }});
             if (response.status === 201) { 
                 setListName(''); 
-                dispatch(setUploadAlert(true));
+                dispatch(setUploadAlert(1));
                 dispatch(setShowListManagementModal(0));
                 dispatch(setSelectedList(selectedList < 0 ? 0 : lists.length));
             } else {
@@ -37,7 +37,7 @@ function ListManagementModal() {
     const emptySelectedList = async () => {
         try {
             const response = await axios.delete(`http://127.0.0.1:3000/lists/${lists[selectedList].id}/empty`);
-            dispatch(setUploadAlert(true));
+            dispatch(setUploadAlert(2));
             dispatch(setShowListManagementModal(0));
             console.log(response.data.message);
         } catch (error) {
@@ -65,7 +65,7 @@ function ListManagementModal() {
             const responseDeleteList = await axios.delete(`http://127.0.0.1:3000/lists/${lists[selectedList].id}`);
             if (responseDeleteList.status === 200) {
                 console.log("test");
-                dispatch(setUploadAlert(true));
+                dispatch(setUploadAlert(3));
                 dispatch(setSelectedList((selectedList - 1) < 0 ? selectedList : selectedList - 1));
                 dispatch(setShowListManagementModal(0));
             } else {
