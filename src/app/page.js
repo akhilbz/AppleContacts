@@ -189,7 +189,7 @@ export default function Home() {
             })}
           </React.Fragment>
         </div>
-        <div className="absolute w-5 h-5 bg-[#d4d4d4] right-[-10px] z-[5] top-1/2 cursor-col-resize rounded-xl"
+        <div className="absolute w-1 h-5 bg-[#7c7c7c] right-[-2px] z-[5] top-1/2 cursor-col-resize rounded-xl"
           onMouseDown={lcHandleMouseDown} />
         </div>)}
       <div className="flex h-full w-full">
@@ -203,7 +203,7 @@ export default function Home() {
                 <IoSearchOutline size={35} color="#d4d4d4" className="mr-4 h-full " />
               </div>
             </div>
-            <div className="absolute w-5 h-5 bg-[#d4d4d4] right-[-10px] top-1/2 cursor-col-resize rounded-xl"
+            <div className="absolute w-1 h-5 bg-[#7c7c7c] right-[-2px] top-1/2 cursor-col-resize rounded-xl"
               onMouseDown={mcHandleMouseDown} />
             <div className="flex-1 overflow-y-auto px-2">
               {contacts.map((contact_obj, order_index) => {

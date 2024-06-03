@@ -82,84 +82,71 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
     </div>)}
    <div className='flex flex-col w-full h-full justify-between space-y-4 '>
    {(contactsLength != 0 && contact != null) && 
-   (<div className='flex flex-col overflow-y-auto w-full h-fit space-y-4'>
+   (<div className='flex flex-col overflow-y-auto w-full h-fit text-[#d4d4d4] space-y-4'>
        <div className='flex w-full items-center space-x-6 justify-between pb-6'> 
             <div className=' w-28 h-28  bg-gray-200 rounded-full overflow-hidden flex items-center justify-center'>
                 <img src={photoPath} alt="Profile" className="w-full h-full object-cover" />
             </div>
 
-            <div className='flex-1 border-b-4 pb-4'> 
-                <h1 className='text-6xl text-right'>{ fullName }</h1>
+            <div className='flex-1 border-b-[1px] border-[#7c7c7c] pb-2'> 
+                <h1 className='text-4xl text-right font-light'>{ fullName }</h1>
             </div>
         </div>
-        {company && (<div className='flex w-full border-b-[3px] pb-3 items-center space-x-6 justify-between'>
+        {company && (<div className='flex w-full border-b-[1px] border-[#7c7c7c] pb-2 items-center px-5 justify-between'>
             <div className='flex'>
-                <h1 className='text-4xl'>Company</h1>
+                <h1 className='text-xl'>company</h1>
             </div>
             <div className='flex'> 
-                <h1 className='text-4xl text-right'>{ company }</h1>
+                <h1 className='text-xl text-right'>{ company }</h1>
             </div>
         </div>)}
-        {phoneNo.length != 0 && (
-            <> {(phoneNo['pref'].length > 0 || phoneNo['cell'].length > 0 ||
-        phoneNo['home'].length > 0) && (<div className='flex w-full items-center space-x-6 justify-between px-12'>
-            <div className='flex border-b-2 pb-1'>
-                <h1 className='text-3xl'>Contact Number</h1>
-            </div>
-            <div className='flex'></div>
-        </div>)}
-        {phoneNo['pref'].length > 0 && (<div className='flex w-full items-center border-b-2 space-x-6 justify-between px-24'> 
+        {phoneNo.length != 0 && (<> 
+        {phoneNo['pref'].length > 0 && (<div className='flex w-full items-center border-b-[1px] border-[#7c7c7c] justify-between px-5'> 
             <div className='flex'>
-                <h1 className='text-2xl'>Main</h1>
+                <h1 className='text-xl'>phone</h1>
             </div>
             <div className='flex'> 
-                <h1 className='text-2xl text-right'>{phoneNo['pref']}</h1>
+                <h1 className='text-xl text-right truncate'>{phoneNo['pref']}</h1>
             </div>
         </div>)}
-        {phoneNo['cell'].length > 0 && (<div className='flex w-full items-center border-b-2 space-x-6 justify-between px-24'> 
+        {phoneNo['cell'].length > 0 && (<div className='flex w-full items-center border-b-[1px] border-[#7c7c7c] justify-between px-5'> 
             <div className='flex'>
-                <h1 className='text-2xl'>Cell</h1>
+                <h1 className='text-xl'>cell</h1>
             </div>
             <div className='flex'> 
-                <h1 className='text-2xl text-right'>{phoneNo['cell'][0]}</h1>
+                <h1 className='text-xl text-right truncate'>{phoneNo['cell'][0]}</h1>
             </div>
         </div>)}
-        {phoneNo['home'].length > 0 && (<div className='flex w-full items-center border-b-2 space-x-6 justify-between px-24'> 
+        {phoneNo['home'].length > 0 && (<div className='flex w-full items-center border-b-[1px] border-[#7c7c7c] justify-between px-5'> 
             <div className='flex'>
-                <h1 className='text-2xl'>Home</h1>
+                <h1 className='text-xl'>home</h1>
             </div>
             <div className='flex'> 
-                <h1 className='text-2xl text-right'>{phoneNo['home']}</h1>
+                <h1 className='text-xl text-right truncate'>{phoneNo['home']}</h1>
             </div>
         </div>)}
         </>) }
         {emails.length != 0 && (
-            <> {(emails['home'].length > 0 || 
-        emails['internet'].length > 0) && (<div className='flex w-full items-center space-x-6 justify-between px-12'>
-            <div className='flex border-b-2 pb-1'>
-                <h1 className='text-3xl'>Email</h1>
-            </div>
-            <div className='flex'></div>
-        </div>)}
-        {emails['home'].length > 0 && (<div className='flex w-full items-center border-b-2 space-x-6 justify-between px-24'> 
+            <> {emails['home'].length > 0 && (<div className='flex w-full items-center border-b-[1px] border-[#7c7c7c] justify-between px-5'> 
             <div className='flex'>
-                <h1 className='text-2xl'>Main</h1>
+                <h1 className='text-xl'>email</h1>
             </div>
             <div className='flex'> 
-                <h1 className='text-2xl text-right'>{emails['home']}</h1>
+                <h1 className='text-xl text-right truncate'>{emails['home']}</h1>
             </div>
         </div>)}
-        {emails['internet'].length > 0 && (<div className='flex w-full items-center border-b-2 space-x-6 justify-between px-24'> 
+        {emails['internet'].length > 0 && (<div className='flex w-full items-center border-b-[1px] border-[#7c7c7c] justify-between px-5'> 
             <div className='flex'>
-                <h1 className='text-2xl'>Cell</h1>
+                <h1 className='text-xl'>other</h1>
             </div>
             <div className='flex'> 
-                <h1 className='text-2xl text-right'>{emails['internet']}</h1>
+                <h1 className='text-xl text-right truncate'>{emails['internet']}</h1>
             </div>
         </div>)}
         </>)}
     </div>)}
     </div>
+    
     <div className='relative flex w-full justify-between h-11 rounded-xl bg-[#4a4a4a] p-1'>
         {showDropUp && (<div className='absolute w-fit bottom-12 flex flex-col z-[5] gap-4 bg-[#141414] p-2 rounded-lg shadow-lg' ref={dropUpRef}>
         <ContactCardDropUp contactInfo={contact} />

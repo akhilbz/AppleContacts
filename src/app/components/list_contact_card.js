@@ -38,7 +38,7 @@ const ListContactCard = ({ name_index, order_index, contact_info }) => {
         dispatch(setSelectedContact([name_index, order_index]));
         dispatch(setContactInfo([contact_info]));
         }}>
-        <h2 className='text-center m-2 flex w-full text-lg text-[#d4d4d4]'>{ full_name }</h2>
+        <h2 className='text-center m-2 flex w-full text-lg text-[#d4d4d4] truncate'>{ full_name }</h2>
     </div>
     )
 };
