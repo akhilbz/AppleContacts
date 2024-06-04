@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setShowListManagementModal, setSelectedList, setUploadAlert } from '../action';
+import { setShowListManagementModal, setSelectedList, setDeletedContact, setUploadAlert, setContactInfo } from '../action';
 import axios from 'axios';
 import { MdOutlineFileUpload } from "react-icons/md";
 import { X } from 'lucide-react';
@@ -12,8 +12,8 @@ function ListManagementModal() {
     const deletedList = useSelector(state => state.deletedList);
     const contactsLength = useSelector(state => state.contactsLength);
     const showListManagementModal = useSelector(state => state.showListManagementModal);
+    const contactInfo = useSelector(state => state.contactInfo);
     const dispatch = useDispatch();
-
     // showListManagementModal == 1
     const createNewList = async (e) => {
         e.preventDefault();
@@ -69,19 +69,38 @@ function ListManagementModal() {
                 dispatch(setSelectedList((selectedList - 1) < 0 ? selectedList : selectedList - 1));
                 dispatch(setShowListManagementModal(0));
             } else {
-                console.error("Failed to delete selected list: ", responseDeleteList.data);
+                console.log("Failed to delete selected list: ", responseDeleteList.data);
             }
         } catch (e) {
             console.error("An error occurred while deleting the list: ", e.message);
         }
     };
 
+    // showListManagementModal == 4
+    // Delete the selected contact
+    const deleteSelectedContact = async () => {
+        try {
+            const responseDeleteContact = await axios.delete(`http://127.0.0.1:3000/contacts/${contactInfo.id}.json`);
+            console.log(responseDeleteContact);
+            if (responseDeleteContact.status === 204) {
+                dispatch(setUploadAlert(5));
+                dispatch(setContactInfo(null));
+                dispatch(setDeletedContact(contactInfo.full_name.join(" ")));
+                dispatch(setShowListManagementModal(0));
+            } else {
+                console.log("Failed to delete selected contact: ", responseDeleteList.data);
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
     return (
         <div className='fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-20 flex flex-col justify-center items-center'>
-            <div className={`w-[50%] ${[2, 3].includes(showListManagementModal) ? "h-[30%]" : "" }  flex flex-col text-white bg-[#141414] rounded-xl p-5 space-y-4`}>
+            <div className={`w-[50%] ${[2, 3, 4].includes(showListManagementModal) ? "h-[30%]" : "" }  flex flex-col text-white bg-[#141414] rounded-xl p-5 space-y-4`}>
                 <div className="flex flex-row w-full justify-between">
-                    {lists.length != 0 && (<h1 className=' text-2xl text-[#d4d4d4] font-semibold'>{`${showListManagementModal == 1 ? "Enter List Name" : 
-                    showListManagementModal == 2 ? `Empty ${lists[selectedList]?.name}` : `Delete ${lists[selectedList]?.name}`}`}</h1>)}
+                    {lists.length != 0 && contactInfo && (<h1 className=' text-2xl text-[#d4d4d4] font-semibold'>{`${showListManagementModal == 1 ? "Enter List Name" : 
+                    showListManagementModal == 2 ? `Empty ${lists[selectedList]?.name}` : showListManagementModal == 3 ? `Delete ${lists[selectedList]?.name}` : `Delete Contact: ${contactInfo.full_name.join(" ")}`}`}</h1>)}
                     <button className='place-self-end' onClick={() => dispatch(setShowListManagementModal(0))}>
                         <X size={30} color='#d4d4d4' />
                     </button>
@@ -131,6 +150,21 @@ function ListManagementModal() {
                         <button className="p-2 h-10 w-fit bg-[#545454] text-[#141414] rounded-lg flex justify-center items-center cursor-pointer"
                         onClick={() => deleteSelectedList()}>
                         Delete List
+                        </button>
+                    </div>
+                </div>)}
+                { showListManagementModal == 4 && contactInfo && (<div className='w-full h-full flex flex-col justify-evenly'>
+                    <div className='flex w-full justify-evenly items-center h-[40%] p-2 text-center bg-[#111111] text-[#FF4C4C] rounded-xl'>
+                        <p>{`Are you sure you want to delete the following contact: ${contactInfo.full_name.join(" ")}? `}</p>
+                    </div>
+                    <div className='flex flex-row w-full justify-evenly items-center h-[40%] bg-[#111111] rounded-xl'>
+                        <button className="p-2 h-10 w-fit bg-[#343434] text-[#141414] rounded-lg flex justify-center items-center cursor-pointer"
+                        onClick={() => dispatch(setShowListManagementModal(0))}>
+                        Cancel
+                        </button>
+                        <button className="p-2 h-10 w-fit bg-[#545454] text-[#141414] rounded-lg flex justify-center items-center cursor-pointer"
+                        onClick={() => deleteSelectedContact()}>
+                        Delete Contact
                         </button>
                     </div>
                 </div>)}

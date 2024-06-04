@@ -7,12 +7,14 @@ const ContactCardDropUp = ({ contactInfo }) => {
   const lists = useSelector(state => state.lists);
   const contactsLength = useSelector(state => state.contactsLength);
 
-  console.log("contactsLength: ", contactsLength);
   return (
     <>
       <ul className="text-[#9B9B9B] cursor-pointer">
         <li><button disabled={lists.length == 0} className={`flex w-full h-fit rounded-lg ${lists.length != 0 ? "hover:bg-[#007aff] hover:text-[#d4d4d4]" : ""}  px-2 py-1`}>New Contact</button></li>
-        <li><button disabled={(lists.length == 0 || contactsLength == 0)} className={`flex w-full h-fit rounded-lg ${(lists.length != 0 && contactsLength != 0) ? "hover:bg-[#007aff] hover:text-[#d4d4d4]" : ""}  px-2 py-1`}>Delete Contact</button></li>
+        <li><button disabled={(lists.length == 0 || contactsLength == 0)} 
+        className={`flex w-full h-fit rounded-lg ${(lists.length != 0 && contactsLength != 0) ? 
+        "hover:bg-[#007aff] hover:text-[#d4d4d4]" : ""}  px-2 py-1`}
+        onClick={() => dispatch(setShowListManagementModal(4))}>Delete Contact</button></li>
         <li><button className={`flex w-full h-fit rounded-lg hover:bg-[#007aff] hover:text-[#d4d4d4] px-2 py-1`}
             onClick={() => dispatch(setShowListManagementModal(1))}>New List</button></li>
         <li className="w-full"><button disabled={(lists.length == 0 || contactsLength == 0)} 

@@ -72,8 +72,7 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
             // photoPath = "file://" + contactInfo[0].photo_path;
             photoPath = contactInfo.photo_path;
         }
-        // console.log(photoPath);
-        if (contactInfo) setContact(contactInfo);
+        setContact(contactInfo);
         setContactId(id);
         setFullName(name);
         setCompany(company);
@@ -185,13 +184,13 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
                 </div>
             </div>)}
             </>)}
-            <>
+            {phoneNo.length != 0 && emails.length != 0 && (<>
             {company == "" && phoneNo['pref'].length == 0 && phoneNo['cell'].length == 0 
             && phoneNo['home'].length == 0 && emails['home'].length == 0 && 
             emails['internet'].length == 0 && !showEdit && (<div className='flex flex-col w-full h-96 justify-center items-center'>
                     <h1 className='text-[#4a4a4a] font-semibold text-xl'>No Contact Information Provided</h1>
             </div>)}
-            </>
+            </>)}
         </div>)}
         {(contactsLength != 0 && contact != null && showEdit) && 
         (<EditContactCard editedContacts={editedContacts} setEditedContacts={setEditedContacts} />)}

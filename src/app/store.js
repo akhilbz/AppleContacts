@@ -7,6 +7,7 @@ const initialState = {
     selectedContact: 0,
     selectedList: 0,
     deletedList: null,
+    deletedContact: "",
     showModal: false,
     showListManagementModal: 0, // 0: Default, 1: New List, 2: Empty List, 3: Delete List
     showDropUp: false,
@@ -30,6 +31,8 @@ const initialState = {
             return { ...state, selectedList: action.payload };
         case 'SET_DELETED_LIST':
             return { ...state, deletedList: action.payload };
+        case 'SET_DELETED_CONTACT':
+            return { ...state, deletedContact: action.payload };
         case 'SET_SHOW_MODAL':
             return { ...state, showModal: action.payload };
         case 'SET_SHOW_LIST_MANAGEMENT_MODAL':

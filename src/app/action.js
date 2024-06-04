@@ -9,6 +9,7 @@ export const SET_SHOW_DROP_UP = 'SET_SHOW_DROP_UP';
 export const SET_SHOW_EDIT_DROP_DOWN = 'SET_SHOW_EDIT_DROP_DOWN';
 export const SET_SELECTED_LIST = 'SET_SELECTED_LIST';
 export const SET_DELETED_LIST = 'SET_DELETED_LIST';
+export const SET_DELETED_CONTACT = 'SET_DELETED_CONTACT';
 export const SET_UPLOAD_ALERT = 'SET_UPLOAD_ALERT';
 export const SET_UPLOAD_NOTIFICATION = 'SET_UPLOAD_NOTIFICATION';
 
@@ -41,6 +42,11 @@ export const setSelectedList = (selectedList) => ({
 export const setDeletedList = (deletedList) => ({
     type: SET_DELETED_LIST,
     payload: deletedList
+});
+
+export const setDeletedContact = (deletedContact) => ({
+    type: SET_DELETED_CONTACT,
+    payload: deletedContact
 });
 
 export const setShowModal = (showModal) => ({

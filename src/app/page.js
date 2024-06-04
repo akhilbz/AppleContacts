@@ -175,7 +175,7 @@ export default function Home() {
       onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
       {uploadNotification != 0 && (<Notifications />)}
       {showModal && <ContactModal />}
-      {([1, 2, 3].includes(showListManagementModal)) && <ListManagementModal />}
+      {showListManagementModal != 0 && <ListManagementModal />}
       {leftWidth != 0 && (<div className="relative bg-[#161616] h-full rounded-l-xl  flex flex-col p-3" style={{ width: `${leftWidth}%`, maxWidth: `20%` }}>
         <div className="flex w-full h-fit justify-between border-b-[1px] border-[#2f2f2f] pb-3">
           <h1 className="text-center font-bold text-4xl ml-4 text-[#d4d4d4]">Lists</h1>
