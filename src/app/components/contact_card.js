@@ -90,17 +90,20 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
             url: `http://127.0.0.1:3000/contacts/${id}.json`
         })
     }, [contactInfo]);
-    
+    // console.log(contactInfo);
+    // console.log(phoneNo.length != 0 && emails.length != 0 && company == "" && phoneNo['pref'].length == 0 && phoneNo['cell'].length == 0 
+    // && phoneNo['home'].length == 0 && emails['home'].length == 0 && 
+    // emails['internet'].length == 0);
     useEffect(() => {
         const updateContact = async () => {
             try {
                 const response = await axios.put(`http://127.0.0.1:3000/contacts/${contactId}.json`, editedContacts);
-                console.log(response);
+                // console.log(response);
                 try {
                     const response = await axios.get(`http://127.0.0.1:3000/contacts/${contactId}.json`)
                     dispatch(setContactInfo(response.data));
                 } catch (err) {
-                    console.log(err);
+                    // console.log(err);
                 }
             } catch (err) {
                 console.log(err);
@@ -122,7 +125,7 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
    {(contactsLength != 0 && contact != null && !showEdit) && 
     (<div className='flex flex-col overflow-y-auto w-full h-fit font-light space-y-4'>
         <div className='flex w-full items-center space-x-6 justify-between pb-6'> 
-                <div className=' w-28 h-28  bg-gray-200 rounded-full overflow-hidden flex items-center justify-center'>
+                <div className='w-28 h-28 bg-gray-200 rounded-full overflow-hidden flex items-center justify-center'>
                     <img src={photoPath} alt="Profile" className="w-full h-full object-cover" />
                 </div>
 
@@ -182,6 +185,13 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
                 </div>
             </div>)}
             </>)}
+            <>
+            {company == "" && phoneNo['pref'].length == 0 && phoneNo['cell'].length == 0 
+            && phoneNo['home'].length == 0 && emails['home'].length == 0 && 
+            emails['internet'].length == 0 && !showEdit && (<div className='flex flex-col w-full h-96 justify-center items-center'>
+                    <h1 className='text-[#4a4a4a] font-semibold text-xl'>No Contact Information Provided</h1>
+            </div>)}
+            </>
         </div>)}
         {(contactsLength != 0 && contact != null && showEdit) && 
         (<EditContactCard editedContacts={editedContacts} setEditedContacts={setEditedContacts} />)}
