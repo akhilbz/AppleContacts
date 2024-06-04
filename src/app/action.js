@@ -1,4 +1,5 @@
 // action types
+export const SET_NEW_CONTACT_INSTANCE = 'SET_NEW_CONTACT_INSTANCE';
 export const SET_CONTACT_INFO = 'SET_CONTACT_INFO';
 export const SET_LISTS = 'SET_LISTS';
 export const SET_CONTACTS_LENGTH = 'SET_CONTACTS_LENGTH';
@@ -14,6 +15,11 @@ export const SET_UPLOAD_ALERT = 'SET_UPLOAD_ALERT';
 export const SET_UPLOAD_NOTIFICATION = 'SET_UPLOAD_NOTIFICATION';
 
 // action creators
+export const setNewContactInstance = (newContactInstance) => ({
+    type: SET_NEW_CONTACT_INSTANCE,
+    payload: newContactInstance
+});
+
 export const setContactInfo = (contactInfo) => ({
     type: SET_CONTACT_INFO,
     payload: contactInfo

@@ -2,9 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { IoAddOutline } from "@react-icons/all-files/io5/IoAddOutline"; 
-import { setShowDropUp, setContactInfo } from '../action';
+import { setShowDropUp, setContactInfo, setNewContactInstance } from '../action';
 import ContactCardDropUp from './contact_card_dropup';
 import EditContactCard from './edit_contact_card';
+import NewContactCard from './new_contact_card';
 
 const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
     const dispatch = useDispatch();
@@ -19,9 +20,18 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
     const [emails, setEmails] = useState([]);
     const [photoPath, setPhotoPath] = useState("");
     const [showEdit, setShowEdit] = useState(false);
+    const newContactInstance = useSelector(state => state.newContactInstance);
     const dropUpRef = useRef(null);
     const [editedContacts, setEditedContacts] = useState(null);
+    const [newContact, setNewContact] = useState({
+        full_name: ["No", "Name"],
+        company: "",
+        photo_path: "",
+        phone_no: [],
+        email: [],
 
+    });
+    
     const handleClickOutside = (event) => {
     if (dropUpRef.current && !dropUpRef.current.contains(event.target)) {
         dispatch(setShowDropUp(false));
@@ -114,14 +124,30 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
         }
     }, [showEdit]);
 
+    useEffect(() => {
+        const createNewContact = async () => {
+            try {
+                const response = await axios.post(`http://127.0.0.1:3000/contacts.json`, newContact);
+                console.log(response);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+
+        if (!newContactInstance) {
+            createNewContact();
+        }
+    }, [newContactInstance]);
+    // console.log(newContact);
+
     return (
     <section className='flex flex-col w-full h-full'>
-    {(contactsLength == 0 || contact == null) && !showEdit && 
+    {(contactsLength == 0 || contact == null) && !showEdit && !newContactInstance &&
     (<div className='flex w-full h-full items-end justify-center '>
         <h1 className='text-[#4a4a4a] font-semibold text-xl'>{ contactsLength == 0 ? "No Cards" : contact == null ? "No Contact Selected" : "No Cards"  }</h1>
     </div>)}
    <div className='flex flex-col w-full h-full justify-between space-y-4 '>
-   {(contactsLength != 0 && contact != null && !showEdit) && 
+   {(contactsLength != 0 && contact != null && !showEdit && !newContactInstance) && 
     (<div className='flex flex-col overflow-y-auto w-full h-fit font-light space-y-4'>
         <div className='flex w-full items-center space-x-6 justify-between pb-6'> 
                 <div className='w-28 h-28 bg-gray-200 rounded-full overflow-hidden flex items-center justify-center'>
@@ -187,13 +213,15 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
             {phoneNo.length != 0 && emails.length != 0 && (<>
             {company == "" && phoneNo['pref'].length == 0 && phoneNo['cell'].length == 0 
             && phoneNo['home'].length == 0 && emails['home'].length == 0 && 
-            emails['internet'].length == 0 && !showEdit && (<div className='flex flex-col w-full h-96 justify-center items-center'>
+            emails['internet'].length == 0 && !showEdit && !newContactInstance && (<div className='flex flex-col w-full h-96 justify-center items-center'>
                     <h1 className='text-[#4a4a4a] font-semibold text-xl'>No Contact Information Provided</h1>
             </div>)}
             </>)}
         </div>)}
-        {(contactsLength != 0 && contact != null && showEdit) && 
+        {(contactsLength != 0 && contact != null && !newContactInstance && showEdit) && 
         (<EditContactCard editedContacts={editedContacts} setEditedContacts={setEditedContacts} />)}
+        {(newContactInstance && !showEdit) && 
+        (<NewContactCard newContact={newContact} setNewContact={setNewContact}/>)}
     </div>
     
     <div className='relative flex w-full justify-between h-11 rounded-xl bg-[#4a4a4a] p-1'>
@@ -205,9 +233,13 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
         <IoAddOutline size={30} color="#9B9B9B"/>
         </div>
         <div className="flex space-x-2">
-        {contact != null && (<div className='h-9 w-fit bg-[#141414] rounded-lg flex justify-center items-center cursor-pointer opacity-1 transition-opacity duration-500'
+        {contact != null && !newContactInstance && (<div className='h-9 w-fit bg-[#141414] rounded-lg flex justify-center items-center cursor-pointer opacity-1 transition-opacity duration-500'
         onClick={() => setShowEdit(!showEdit)}>
             <h1 className={`${showEdit ? "text-[#66b3ff]" : "text-[#9B9B9B]"} font-normal px-6`}>{showEdit ? "Done" : "Edit"}</h1>
+        </div>)}
+        {newContactInstance && (<div className='h-9 w-fit bg-[#141414] rounded-lg flex justify-center items-center cursor-pointer opacity-1 transition-opacity duration-500'
+        onClick={() => setNewContactInstance(!newContactInstance)}>
+            <h1 className={`${newContactInstance ? "text-[#66b3ff]" : "text-[#9B9B9B]"} font-normal px-6`}>Create New Contact</h1>
         </div>)}
         {listsColumnWidth === 0 && (
             <div className='h-9 w-fit bg-[#141414] rounded-lg flex justify-center items-center cursor-pointer'

@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 const initialState = {
+    newContactInstance: false,
     contactInfo: null,
     lists: [],
     contactsLength: 0,
@@ -19,6 +20,8 @@ const initialState = {
   const rootReducer = (state = initialState, action) => {
     // Handle different actions here
     switch (action.type) {
+        case 'SET_NEW_CONTACT_INSTANCE':
+            return { ...state, newContactInstance: action.payload };
         case 'SET_CONTACT_INFO':
             return { ...state, contactInfo: action.payload };
         case 'SET_LISTS':

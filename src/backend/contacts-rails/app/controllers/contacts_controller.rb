@@ -22,15 +22,12 @@ class ContactsController < ApplicationController
   # POST /contacts or /contacts.json
   def create
     @contact = Contact.new(contact_params)
+    @list = ListContact.where(contact_id: @contact.id)
 
-    respond_to do |format|
-      if @contact.save
-        format.html { redirect_to contact_url(@contact), notice: "Contact was successfully created." }
-        format.json { render :show, status: :created, location: @contact }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @contact.errors, status: :unprocessable_entity }
-      end
+    if @contact.save
+      render json: @contact
+    else
+      render json: @contact.errors, status: :unprocessable_entity
     end
   end
 
