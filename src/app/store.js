@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 const initialState = {
-    contactInfo: [],
+    contactInfo: null,
     lists: [],
     contactsLength: 0,
     selectedContact: 0,
@@ -10,6 +10,7 @@ const initialState = {
     showModal: false,
     showListManagementModal: 0, // 0: Default, 1: New List, 2: Empty List, 3: Delete List
     showDropUp: false,
+    showEditDropDown: false,
     uploadAlert: 0,
     uploadNotification: 0,
   };
@@ -18,7 +19,7 @@ const initialState = {
     // Handle different actions here
     switch (action.type) {
         case 'SET_CONTACT_INFO':
-            return { ...state, contactInfo: [...action.payload] };
+            return { ...state, contactInfo: action.payload };
         case 'SET_LISTS':
             return { ...state, lists: [...action.payload] };
         case 'SET_CONTACTS_LENGTH':
@@ -35,6 +36,8 @@ const initialState = {
             return { ...state, showListManagementModal: action.payload };
         case 'SET_SHOW_DROP_UP':
             return { ...state, showDropUp: action.payload };
+        case 'SET_SHOW_EDIT_DROP_DOWN':
+            return { ...state, showEditDropDown: action.payload };
         case 'SET_UPLOAD_ALERT':
             return { ...state, uploadAlert: action.payload };
         case 'SET_UPLOAD_NOTIFICATION':

@@ -6,6 +6,7 @@ export const SET_SELECTED_CONTACT = 'SET_SELECTED_CONTACT';
 export const SET_SHOW_MODAL = 'SET_SHOW_MODAL';
 export const SET_SHOW_LIST_MANAGEMENT_MODAL = 'SET_SHOW_LIST_MANAGEMENT_MODAL';
 export const SET_SHOW_DROP_UP = 'SET_SHOW_DROP_UP';
+export const SET_SHOW_EDIT_DROP_DOWN = 'SET_SHOW_EDIT_DROP_DOWN';
 export const SET_SELECTED_LIST = 'SET_SELECTED_LIST';
 export const SET_DELETED_LIST = 'SET_DELETED_LIST';
 export const SET_UPLOAD_ALERT = 'SET_UPLOAD_ALERT';
@@ -55,6 +56,11 @@ export const setShowListManagementModal = (showListManagementModal) => ({
 export const setShowDropUp = (showDropUp) => ({
     type: SET_SHOW_DROP_UP,
     payload: showDropUp
+});
+
+export const setShowEditDropDown = (showEditDropDown) => ({
+    type: SET_SHOW_EDIT_DROP_DOWN,
+    payload: showEditDropDown
 });
 
 export const setUploadAlert = (uploadAlert) => ({

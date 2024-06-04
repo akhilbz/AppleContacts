@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setContactInfo, setSelectedContact } from '../action';
+import axios from 'axios';
 const ListContactCard = ({ name_index, order_index, contact_info }) => {
-
     const selectedContact = useSelector(state => state.selectedContact);
     const dispatch = useDispatch();
 
@@ -29,14 +29,25 @@ const ListContactCard = ({ name_index, order_index, contact_info }) => {
     } else {
         full_name = contact_info.full_name.join(' ');
     } 
-    // console.log(list_index)
+
+    const retrieveContactData = async () => {
+        try {
+            const response = await axios.get(`http://127.0.0.1:3000/contacts/${contact_info.id}.json`)
+            console.log(response);
+            dispatch(setContactInfo(response.data));
+        } catch (err) {
+            console.log(err);
+        }
+        
+    };
     return (
     <div className='flex w-full h-fit rounded-xl ' 
     style={{ backgroundColor: selectedContact[0] == name_index 
         && selectedContact[1] == order_index ? '#007aff' : ''}} 
     onClick={() => {
         dispatch(setSelectedContact([name_index, order_index]));
-        dispatch(setContactInfo([contact_info]));
+        retrieveContactData();
+        // dispatch(setContactInfo(contact_info));
         }}>
         <h2 className='text-center m-2 flex w-full text-lg text-[#d4d4d4] truncate'>{ full_name }</h2>
     </div>

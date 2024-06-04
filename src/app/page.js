@@ -62,7 +62,7 @@ export default function Home() {
           var size = responseContacts.data.contacts.length;
           dispatch(setContactsLength(size));
           dispatch(setUploadAlert(0)); 
-  
+          
           /* Contacts Sorting Algorithm A-Z */
           var all_contacts = [];
           var total = 0;
@@ -71,7 +71,7 @@ export default function Home() {
             for (var j = 0; j < size; j++) {
               const contact = responseContacts.data.contacts[j].full_name;
               if (String.fromCharCode(c) == contact[contact.length - 1].toLowerCase().charAt(0)) {
-                sorted_contacts.push(responseContacts.data.contacts[j]);
+                sorted_contacts.push({id: responseContacts.data.contacts[j].id, full_name: contact});
               }
             }
             all_contacts.push({ [String.fromCharCode(c).toUpperCase()]: sorted_contacts });

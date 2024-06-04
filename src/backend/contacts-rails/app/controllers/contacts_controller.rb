@@ -36,14 +36,10 @@ class ContactsController < ApplicationController
 
   # PATCH/PUT /contacts/1 or /contacts/1.json
   def update
-    respond_to do |format|
-      if @contact.update(contact_params)
-        format.html { redirect_to contact_url(@contact), notice: "Contact was successfully updated." }
-        format.json { render :show, status: :ok, location: @contact }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @contact.errors, status: :unprocessable_entity }
-      end
+    if @contact.update(contact_params)
+      render json: @contact
+    else
+      render json: @contact.errors, status: :unprocessable_entity
     end
   end
 
@@ -74,14 +70,17 @@ class ContactsController < ApplicationController
         email: [:home, :internet]
       ).tap do |whitelisted|
         whitelisted[:phone_no] = {
-          cell: params[:contact][:phone_no_cell].split(",").map(&:strip),
-          home: params[:contact][:phone_no_home].split(",").map(&:strip),
-          pref: params[:contact][:phone_no_pref].split(",").map(&:strip)
+          cell: (params[:contact][:phone_no][:cell]) || [],
+          home: (params[:contact][:phone_no][:home]) || [],
+          pref: (params[:contact][:phone_no][:pref]) || []
         }
+        
         whitelisted[:email] = {
-          home: params[:contact][:email_home].split(",").map(&:strip),
-          internet: params[:contact][:email_internet].split(",").map(&:strip)
+          home: (params[:contact][:email][:home]) || [],
+          internet: (params[:contact][:email][:internet]) || []
         }
+        
+        Rails.logger.debug "Value of phone_no_cell parameter: #{params[:phone_no][:cell]}"
         Rails.logger.debug "Received full_name: #{params[:contact][:full_name]}"
       end
     end
