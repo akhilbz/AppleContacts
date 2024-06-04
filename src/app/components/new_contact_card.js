@@ -1,7 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import { IoAddOutline } from "@react-icons/all-files/io5/IoAddOutline";
+import React, { useEffect, useRef } from "react";
 import { setShowEditDropDown } from "../action"; 
-import EditContactCardDropdown from "./edit_contact_card_dropdown";
 import { useSelector, useDispatch} from "react-redux";
 
 const NewContactCard = ({ newContact, setNewContact }) => {
@@ -92,7 +90,7 @@ const NewContactCard = ({ newContact, setNewContact }) => {
         });
     };
 
-    // console.log(newContact);
+    console.log(newContact);
     return (
         <div className="flex flex-col w-full h-full p-5 mb-5 rounded-xl border-[#7c7c7c] border-[1px] bg-[#161616] ">
             <div className='flex flex-col overflow-y-auto w-full h-full font-light space-y-4'>

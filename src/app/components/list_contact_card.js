@@ -5,8 +5,9 @@ import axios from 'axios';
 const ListContactCard = ({ name_index, order_index, contact_info }) => {
     const selectedContact = useSelector(state => state.selectedContact);
     const newContactInstance = useSelector(state => state.newContactInstance);
+    const uploadAlert = useSelector(state => state.uploadAlert);
     const dispatch = useDispatch();
-    
+
     var full_name = "";
 
     if (contact_info.full_name.length == 3 && contact_info.full_name[1] == ' ') {
@@ -32,7 +33,12 @@ const ListContactCard = ({ name_index, order_index, contact_info }) => {
         full_name = contact_info.full_name.join(' ');
     } 
 
+    useEffect(() => {
+        if (uploadAlert == 6) retrieveContactData();
+    }, [uploadAlert]);
+
     const retrieveContactData = async () => {
+        console.log(contact_info.id);
         try {
             const response = await axios.get(`http://127.0.0.1:3000/contacts/${contact_info.id}.json`)
             console.log(response);
@@ -42,6 +48,7 @@ const ListContactCard = ({ name_index, order_index, contact_info }) => {
         }
         
     };
+    // console.log(name_index + ": " + order_index);
     return (
     <div className='flex w-full h-fit rounded-xl ' 
     style={{ backgroundColor: selectedContact[0] == name_index 
@@ -50,7 +57,6 @@ const ListContactCard = ({ name_index, order_index, contact_info }) => {
         dispatch(setSelectedContact([name_index, order_index]));
         dispatch(setNewContactInstance(false));
         retrieveContactData();
-        // dispatch(setContactInfo(contact_info));
         }}>
         <h2 className='text-center m-2 flex w-full text-lg text-[#d4d4d4] truncate'>{ full_name }</h2>
     </div>

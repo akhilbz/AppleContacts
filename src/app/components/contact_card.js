@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { IoAddOutline } from "@react-icons/all-files/io5/IoAddOutline"; 
-import { setShowDropUp, setContactInfo, setNewContactInstance } from '../action';
+import { setShowDropUp, setContactInfo, setNewContactInstance, setUploadAlert, setSelectedContact } from '../action';
 import ContactCardDropUp from './contact_card_dropup';
 import EditContactCard from './edit_contact_card';
 import NewContactCard from './new_contact_card';
@@ -21,15 +21,16 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
     const [photoPath, setPhotoPath] = useState("");
     const [showEdit, setShowEdit] = useState(false);
     const newContactInstance = useSelector(state => state.newContactInstance);
+    const selectedList = useSelector(state => state.selectedList);
+    const lists = useSelector(state => state.lists);
     const dropUpRef = useRef(null);
     const [editedContacts, setEditedContacts] = useState(null);
     const [newContact, setNewContact] = useState({
         full_name: ["No", "Name"],
         company: "",
         photo_path: "",
-        phone_no: [],
-        email: [],
-
+        phone_no: {"cell": [], "home": [], "pref": []},
+        email: {"home": [], "internet": []},
     });
     
     const handleClickOutside = (event) => {
@@ -124,21 +125,33 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
         }
     }, [showEdit]);
 
-    useEffect(() => {
-        const createNewContact = async () => {
-            try {
-                const response = await axios.post(`http://127.0.0.1:3000/contacts.json`, newContact);
-                console.log(response);
-            } catch (err) {
-                console.log(err);
-            }
-        };
-
-        if (!newContactInstance) {
-            createNewContact();
+    const createNewContact = async () => {
+        
+        try {
+            const payload = {
+                contact: newContact,
+                list_id: lists[selectedList].id
+            };
+            const response = await axios.post(`http://127.0.0.1:3000/contacts.json`, payload, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+                });
+            console.log(response);
+            const contact_name = response.data.full_name;
+            const charPos = contact_name[contact_name.length - 1].toLowerCase().charAt(0).charCodeAt(0) 
+            - 'a'.charCodeAt(0);
+            console.log(charPos);
+            dispatch(setNewContactInstance(!newContactInstance));
+            dispatch(setUploadAlert(6));
+            dispatch(setSelectedContact([0, charPos]));
+            dispatch(setContactInfo(response.data));
+        } catch (err) {
+            console.log(err);
         }
-    }, [newContactInstance]);
-    // console.log(newContact);
+        
+    };
+
 
     return (
     <section className='flex flex-col w-full h-full'>
@@ -238,7 +251,7 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
             <h1 className={`${showEdit ? "text-[#66b3ff]" : "text-[#9B9B9B]"} font-normal px-6`}>{showEdit ? "Done" : "Edit"}</h1>
         </div>)}
         {newContactInstance && (<div className='h-9 w-fit bg-[#141414] rounded-lg flex justify-center items-center cursor-pointer opacity-1 transition-opacity duration-500'
-        onClick={() => setNewContactInstance(!newContactInstance)}>
+        onClick={createNewContact}>
             <h1 className={`${newContactInstance ? "text-[#66b3ff]" : "text-[#9B9B9B]"} font-normal px-6`}>Create New Contact</h1>
         </div>)}
         {listsColumnWidth === 0 && (

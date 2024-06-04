@@ -80,7 +80,7 @@ function ListManagementModal() {
     // Delete the selected contact
     const deleteSelectedContact = async () => {
         try {
-            const responseDeleteContact = await axios.delete(`http://127.0.0.1:3000/contacts/${contactInfo.id}.json`);
+            const responseDeleteContact = await axios.delete(`http://127.0.0.1:3000/contacts/${contactInfo.id}.json`, { list_id: lists[selectedList].id});
             console.log(responseDeleteContact);
             if (responseDeleteContact.status === 204) {
                 dispatch(setUploadAlert(5));

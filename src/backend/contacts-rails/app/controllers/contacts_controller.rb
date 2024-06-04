@@ -22,9 +22,12 @@ class ContactsController < ApplicationController
   # POST /contacts or /contacts.json
   def create
     @contact = Contact.new(contact_params)
-    @list = ListContact.where(contact_id: @contact.id)
-
+    list_id = params[:list_id]
+  
     if @contact.save
+      if list_id.present?
+        ListContact.create(list_id: list_id, contact_id: @contact.id)
+      end
       render json: @contact
     else
       render json: @contact.errors, status: :unprocessable_entity
@@ -42,11 +45,14 @@ class ContactsController < ApplicationController
 
   # DELETE /contacts/1 or /contacts/1.json
   def destroy
-    @contact.destroy
-
-    respond_to do |format|
-      format.html { redirect_to contacts_url, notice: "Contact was successfully destroyed." }
-      format.json { head :no_content }
+    list_id = params[:list_id]
+    if list_id.present?
+      ListContact.where(list_id: list_i, contact_id: @contact.id).destroy_all
+    end
+    if @contact.destroy
+      head :no_content
+    else
+      render json: @contact.errors, status: :unprocessable_entity
     end
   end
 
@@ -62,7 +68,7 @@ class ContactsController < ApplicationController
       params.require(:contact).permit(
         :company,
         :photo_path,
-        full_name: [""],
+        full_name: [],
         phone_no: [:cell, :home, :pref],
         email: [:home, :internet]
       ).tap do |whitelisted|
@@ -77,8 +83,7 @@ class ContactsController < ApplicationController
           internet: (params[:contact][:email][:internet]) || []
         }
         
-        Rails.logger.debug "Value of phone_no_cell parameter: #{params[:phone_no][:cell]}"
-        Rails.logger.debug "Received full_name: #{params[:contact][:full_name]}"
+        Rails.logger.debug "Value of list id: #{params[:contact][:full_name]}"
       end
     end
 
