@@ -90,7 +90,7 @@ const NewContactCard = ({ newContact, setNewContact }) => {
         });
     };
 
-    console.log(newContact);
+    // console.log(newContact);
     return (
         <div className="flex flex-col w-full h-full p-5 mb-5 rounded-xl border-[#7c7c7c] border-[1px] bg-[#161616] ">
             <div className='flex flex-col overflow-y-auto w-full h-full font-light space-y-4'>
@@ -116,7 +116,7 @@ const NewContactCard = ({ newContact, setNewContact }) => {
                         <input
                                 placeholder="organization name"
                                 type="text"
-                                value={newContact.company}
+                                // value={newContact.company}
                                 onChange={handleCompanyChange}
                                 className='text-xl text-right placeholder:text-[#444444] text-[#797979] bg-[#212121] px-2 rounded-lg '
                             />
@@ -131,7 +131,7 @@ const NewContactCard = ({ newContact, setNewContact }) => {
                         <input
                                 type="text"
                                 placeholder="+1-234-567-8910"
-                                value={newContact.phone_no['pref']}
+                                // value={newContact.phone_no['pref']}
                                 onChange={handlePhonePreferredChange}
                                 className='text-xl text-right placeholder:text-[#444444] text-[#797979] bg-[#212121] px-2 rounded-lg '
                             />
@@ -145,7 +145,7 @@ const NewContactCard = ({ newContact, setNewContact }) => {
                         <input
                                 type="text"
                                 placeholder="+1-234-567-8910"
-                                value={newContact.phone_no['cell']}
+                                // value={newContact.phone_no['cell']}
                                 onChange={handlePhoneCellChange}
                                 className='text-xl text-right placeholder:text-[#444444] text-[#797979] bg-[#212121] px-2 rounded-lg '
                             />
@@ -159,7 +159,7 @@ const NewContactCard = ({ newContact, setNewContact }) => {
                         <input
                                 type="text"
                                 placeholder="+1-234-567-8910"
-                                value={newContact.phone_no['home']}
+                                // value={newContact.phone_no['home']}
                                 onChange={handlePhoneHomeChange}
                                 className='text-xl text-right placeholder:text-[#444444] text-[#797979] bg-[#212121] px-2 rounded-lg '
                             />
@@ -173,7 +173,7 @@ const NewContactCard = ({ newContact, setNewContact }) => {
                         <input
                                 type="text"
                                 placeholder="contact@list.gmail.com"
-                                value={newContact.email['home']}
+                                // value={newContact.email['home']}
                                 onChange={handleEmailHomeChange}
                                 className='text-xl text-right placeholder:text-[#444444] text-[#797979] bg-[#212121] px-2 rounded-lg '
                             />
@@ -187,7 +187,7 @@ const NewContactCard = ({ newContact, setNewContact }) => {
                         <input
                                 type="text"
                                 placeholder="contact@list.gmail.com"
-                                value={newContact.email['internet']}
+                                // value={newContact.email['internet']}
                                 onChange={handleEmailOtherChange}
                                 className='text-xl text-right placeholder:text-[#444444] text-[#797979] bg-[#212121] px-2 rounded-lg '
                             />

@@ -3,7 +3,7 @@ import axios from "axios";
 import React from 'react';
 import { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { setUploadAlert, setLists, setContactsLength, setUploadNotification } from "./action";
+import { setUploadAlert, setLists, setContactsLength, setUploadNotification, setSelectedContact, setNotifySelectedContact } from "./action";
 import ListContactCard from "./components/list_contact_card";
 import ListListCard from "./components/list_list_card";
 import ContactCardHeader from "./components/contact_card_header";
@@ -28,6 +28,7 @@ export default function Home() {
   const selectedList = useSelector(state => state.selectedList);
   const lists = useSelector(state => state.lists);
   const uploadNotification = useSelector(state => state.uploadNotification);
+  const notifySelectedContact = useSelector(state => state.notifySelectedContact);
   const dispatch = useDispatch();
 
   // TODO: Add an Activity Indicator for Uploading Contacts
@@ -169,6 +170,16 @@ export default function Home() {
   };
 
   // console.log(middleWidth + " " + leftWidth + " " + rightWidth);
+  useEffect(() => {
+    if (notifySelectedContact) {
+      const contactObj = contacts.find(contact => contact[notifySelectedContact.letter.toUpperCase()]);
+      if (contactObj) {
+        dispatch(setSelectedContact([contactObj[notifySelectedContact.letter.toUpperCase()].length, notifySelectedContact.char_pos]));
+        dispatch(setNotifySelectedContact(null));
+      }
+    }
+  }, [notifySelectedContact, contacts, dispatch]);
+
 
   return (
     <main ref={containerRef} className="flex h-screen w-full overflow-hidden p-12"
@@ -208,6 +219,10 @@ export default function Home() {
             <div className="flex-1 overflow-y-auto px-2">
               {contacts.map((contact_obj, order_index) => {
                 var contact_key = Object.keys(contact_obj)[0];
+                // if (notifySelectedContact && contact_obj[notifySelectedContact.letter.toUpperCase()]) { 
+                //   dispatch(setSelectedContact([contact_obj[notifySelectedContact.letter.toUpperCase()].length, notifySelectedContact.char_pos]));
+                //   dispatch(setNotifySelectedContact(null));
+                // }
                 return (
                   contact_obj[contact_key].length > 0 && (<React.Fragment>
                     <ContactCardHeader key={order_index} letter={contact_key} />

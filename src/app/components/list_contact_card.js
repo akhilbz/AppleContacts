@@ -5,7 +5,6 @@ import axios from 'axios';
 const ListContactCard = ({ name_index, order_index, contact_info }) => {
     const selectedContact = useSelector(state => state.selectedContact);
     const newContactInstance = useSelector(state => state.newContactInstance);
-    const uploadAlert = useSelector(state => state.uploadAlert);
     const dispatch = useDispatch();
 
     var full_name = "";
@@ -33,15 +32,10 @@ const ListContactCard = ({ name_index, order_index, contact_info }) => {
         full_name = contact_info.full_name.join(' ');
     } 
 
-    useEffect(() => {
-        if (uploadAlert == 6) retrieveContactData();
-    }, [uploadAlert]);
-
     const retrieveContactData = async () => {
-        console.log(contact_info.id);
+        console.log(contact_info);
         try {
             const response = await axios.get(`http://127.0.0.1:3000/contacts/${contact_info.id}.json`)
-            console.log(response);
             dispatch(setContactInfo(response.data));
         } catch (err) {
             console.log(err);

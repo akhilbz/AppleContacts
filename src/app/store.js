@@ -15,6 +15,7 @@ const initialState = {
     showEditDropDown: false,
     uploadAlert: 0,
     uploadNotification: 0,
+    notifySelectedContact: null
   };
   
   const rootReducer = (state = initialState, action) => {
@@ -48,6 +49,8 @@ const initialState = {
             return { ...state, uploadAlert: action.payload };
         case 'SET_UPLOAD_NOTIFICATION':
             return { ...state, uploadNotification: action.payload };
+        case 'SET_NOTIFY_SELECTED_CONTACT':
+            return { ...state, notifySelectedContact: action.payload };
       default:
         return state;
     }

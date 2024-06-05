@@ -52,7 +52,7 @@ const Notifications = ({ }) => {
             case 5:
                 return (
                     <div className="mt-[85px] w-fit z-10 flex bg-red-400 text-black p-2 rounded-lg shadow-lg space-x-2 items-center">
-                    { selectedList >= 0 && (<p className="text-sm font-normal"><span className="font-semibold">{deletedContact}</span>'s contact information is removed.</p>)}
+                    { selectedList >= 0 && (<p className="text-sm font-normal"><span className="font-semibold">{deletedContact == "" ? "No Name" : deletedContact}</span>'s contact information is removed.</p>)}
                     <button onClick={() => dispatch(setUploadNotification(0))} className="text-black">&times;</button>
                     </div>
                 );

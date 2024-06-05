@@ -13,6 +13,7 @@ export const SET_DELETED_LIST = 'SET_DELETED_LIST';
 export const SET_DELETED_CONTACT = 'SET_DELETED_CONTACT';
 export const SET_UPLOAD_ALERT = 'SET_UPLOAD_ALERT';
 export const SET_UPLOAD_NOTIFICATION = 'SET_UPLOAD_NOTIFICATION';
+export const SET_NOTIFY_SELECTED_CONTACT = 'SET_NOTIFY_SELECTED_CONTACT';
 
 // action creators
 export const setNewContactInstance = (newContactInstance) => ({
@@ -83,4 +84,9 @@ export const setUploadAlert = (uploadAlert) => ({
 export const setUploadNotification = (uploadNotification) => ({
     type: SET_UPLOAD_NOTIFICATION,
     payload: uploadNotification
+});
+
+export const setNotifySelectedContact = (notifySelectedContact) => ({
+    type: SET_NOTIFY_SELECTED_CONTACT,
+    payload: notifySelectedContact
 });

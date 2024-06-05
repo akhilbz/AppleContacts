@@ -155,7 +155,7 @@ function ListManagementModal() {
                 </div>)}
                 { showListManagementModal == 4 && contactInfo && (<div className='w-full h-full flex flex-col justify-evenly'>
                     <div className='flex w-full justify-evenly items-center h-[40%] p-2 text-center bg-[#111111] text-[#FF4C4C] rounded-xl'>
-                        <p>{`Are you sure you want to delete the following contact: ${contactInfo.full_name.join(" ")}? `}</p>
+                        <p>{`Are you sure you want to delete the following contact: ${contactInfo.full_name.join(" ") == "" ? "No Name" : contactInfo.full_name.join(" ")}? `}</p>
                     </div>
                     <div className='flex flex-row w-full justify-evenly items-center h-[40%] bg-[#111111] rounded-xl'>
                         <button className="p-2 h-10 w-fit bg-[#343434] text-[#141414] rounded-lg flex justify-center items-center cursor-pointer"

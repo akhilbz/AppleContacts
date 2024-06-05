@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { IoAddOutline } from "@react-icons/all-files/io5/IoAddOutline"; 
-import { setShowDropUp, setContactInfo, setNewContactInstance, setUploadAlert, setSelectedContact } from '../action';
+import { setShowDropUp, setContactInfo, setNewContactInstance, setUploadAlert, setNotifySelectedContact } from '../action';
 import ContactCardDropUp from './contact_card_dropup';
 import EditContactCard from './edit_contact_card';
 import NewContactCard from './new_contact_card';
@@ -26,7 +26,7 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
     const dropUpRef = useRef(null);
     const [editedContacts, setEditedContacts] = useState(null);
     const [newContact, setNewContact] = useState({
-        full_name: ["No", "Name"],
+        full_name: [""],
         company: "",
         photo_path: "",
         phone_no: {"cell": [], "home": [], "pref": []},
@@ -126,7 +126,7 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
     }, [showEdit]);
 
     const createNewContact = async () => {
-        
+
         try {
             const payload = {
                 contact: newContact,
@@ -141,15 +141,32 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
             const contact_name = response.data.full_name;
             const charPos = contact_name[contact_name.length - 1].toLowerCase().charAt(0).charCodeAt(0) 
             - 'a'.charCodeAt(0);
-            console.log(charPos);
+            
+            dispatch(setNotifySelectedContact({char_pos: charPos, letter: contact_name[contact_name.length - 1].charAt(0)}));
             dispatch(setNewContactInstance(!newContactInstance));
             dispatch(setUploadAlert(6));
-            dispatch(setSelectedContact([0, charPos]));
             dispatch(setContactInfo(response.data));
+            setNewContact({
+                full_name: [""],
+                company: "",
+                photo_path: "",
+                phone_no: {"cell": [], "home": [], "pref": []},
+                email: {"home": [], "internet": []},
+            });
         } catch (err) {
             console.log(err);
-        }
-        
+        } 
+    };
+
+    const cancelNewContact = () => {
+        dispatch(setNewContactInstance(!newContactInstance));
+        setNewContact({
+            full_name: [""],
+            company: "",
+            photo_path: "",
+            phone_no: {"cell": [], "home": [], "pref": []},
+            email: {"home": [], "internet": []},
+        });
     };
 
 
@@ -249,6 +266,10 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
         {contact != null && !newContactInstance && (<div className='h-9 w-fit bg-[#141414] rounded-lg flex justify-center items-center cursor-pointer opacity-1 transition-opacity duration-500'
         onClick={() => setShowEdit(!showEdit)}>
             <h1 className={`${showEdit ? "text-[#66b3ff]" : "text-[#9B9B9B]"} font-normal px-6`}>{showEdit ? "Done" : "Edit"}</h1>
+        </div>)}
+        {newContactInstance && (<div className='h-9 w-fit bg-[#141414] rounded-lg flex justify-center items-center cursor-pointer opacity-1 transition-opacity duration-500'
+        onClick={cancelNewContact}>
+            <h1 className={` text-[#9B9B9B] font-normal px-6`}>Cancel</h1>
         </div>)}
         {newContactInstance && (<div className='h-9 w-fit bg-[#141414] rounded-lg flex justify-center items-center cursor-pointer opacity-1 transition-opacity duration-500'
         onClick={createNewContact}>
