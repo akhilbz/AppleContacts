@@ -29,9 +29,9 @@ function ContactPhotoModal({ current_photo }) {
         
     };
 
-    const deleteExistingPhoto = () => {
+    const deleteExistingPhoto = async () => {
         if (photoPath) {
-            axios.delete(`http://127.0.0.1:3000/delete-photo`, { data: { photo_path: photoPath } })
+            await axios.delete(`http://127.0.0.1:3000/delete-photo`, { data: { photo_path: photoPath } })
             .then(() => {
                 console.log('Old photo deleted');
             })
@@ -108,7 +108,7 @@ function ContactPhotoModal({ current_photo }) {
                 </div>
                 <div className='flex flex-row w-[full] justify-evenly items-center h-[35%] bg-[#111111] rounded-xl mx-5'>
                     <div className="overflow-ellipsis overflow-hidden whitespace-nowrap w-[60%]">
-                        <h1 className={`text-[#343434]  ${incorrectPhotoTypeAlert ? "text-[#e63946] text-lg" : "text-xl"}`}>{`${ incorrectPhotoTypeAlert ? "Incorrect Image Type - Must be one of the following (.png/.jpg/.jpeg)" : photo ? `Uploaded Image: ${truncateFileName(photo.name, 30)}` : "No Image Uploaded"}`}</h1>
+                        <h1 className={`text-[#343434]  ${incorrectPhotoTypeAlert ? "text-[#e63946] text-[15px]" : "text-xl"}`}>{`${ incorrectPhotoTypeAlert ? "Incorrect Image Type - Must be one of the following: (.png/.jpg/.jpeg/.webp)" : photo ? `Uploaded Image: ${truncateFileName(photo.name, 30)}` : "Uploaded Image: No Image Uploaded"}`}</h1>
                     </div>
                     {photoPath != "" && (<button disabled={!photo} className={`w-fit p-2 ${photo ? 'bg-[#545454] text-[#141414] cursor-pointer' : 'bg-[#4a4a4a] text-[#242424] cursor-auto'}  rounded-lg flex justify-center items-center cursor-pointer`}
                     onClick={() => {dispatch(setPhotoData(photoPath)); dispatch(setShowPhotoModal(false));}}>

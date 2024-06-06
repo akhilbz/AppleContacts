@@ -28,7 +28,7 @@ const ListListCard = ({  list, list_index }) => {
       className='flex w-full h-fit rounded-xl group' 
       style={{ backgroundColor: selectedList === (list_index) ? '#4a4a4a' : ''}} 
       onClick={() => dispatch(setSelectedList(list_index))}>
-      <h2 className='text-center m-2 flex w-full text-lg text-[#d4d4d4] truncate'>{ list.name }</h2>
+      <h2 className='text-center m-2 flex w-full text-lg text-[#d4d4d4] overflow-ellipsis'>{ list.name }</h2>
       <button 
         className={`text-[#d4d4d4] text-lg mr-2 hidden ${selectedList == (list_index) ? "group-hover:block" : ""}`} 
         onClick={() => {

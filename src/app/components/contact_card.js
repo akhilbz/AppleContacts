@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { IoAddOutline } from "@react-icons/all-files/io5/IoAddOutline"; 
-import { setShowDropUp, setContactInfo, setNewContactInstance, setUploadAlert, setNotifySelectedContact } from '../action';
+import { setShowDropUp, setContactInfo, setSelectedContact, setNewContactInstance, setUploadAlert, setNotifySelectedContact } from '../action';
 import ContactCardDropUp from './contact_card_dropup';
 import EditContactCard from './edit_contact_card';
 import NewContactCard from './new_contact_card';
@@ -61,7 +61,7 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
         
         // Side Effect: every time a new list_contact_card is clicked, it will set it to false if showEdit is true
         if (contactInfo && showEdit && newContactInstance) setShowEdit(false);
-        
+
         if (contactInfo) {
             // ID Extraction:
             id = contactInfo.id
@@ -103,9 +103,7 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
             url: `http://127.0.0.1:3000/contacts/${id}.json`
         })
     }, [contactInfo, newContactInstance]);
-    // console.log(phoneNo.length != 0 && emails.length != 0 && company == "" && phoneNo['pref'].length == 0 && phoneNo['cell'].length == 0 
-    // && phoneNo['home'].length == 0 && emails['home'].length == 0 && 
-    // emails['internet'].length == 0);
+
     useEffect(() => {
         const updateContact = async () => {
             try {

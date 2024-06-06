@@ -80,6 +80,15 @@ function ListManagementModal() {
     // Delete the selected contact
     const deleteSelectedContact = async () => {
         try {
+            if (contactInfo.photo_path !== "") {
+                await axios.delete(`http://127.0.0.1:3000/delete-photo`, { data: { photo_path: contactInfo.photo_path } })
+                .then(() => {
+                    console.log('Old photo deleted');
+                })
+                .catch(error => {
+                    console.error('Error deleting old photo:', error);
+                });
+            }
             const responseDeleteContact = await axios.delete(`http://127.0.0.1:3000/contacts/${contactInfo.id}.json`, { list_id: lists[selectedList].id});
             console.log(responseDeleteContact);
             if (responseDeleteContact.status === 204) {
@@ -94,19 +103,19 @@ function ListManagementModal() {
             console.log(e);
         }
     };
-    console.log(showListManagementModal == 1);
+    console.log(contactInfo);
     return (
         <div className='fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-20 flex flex-col justify-center items-center'>
-            <div className={`w-[50%] ${[2, 3, 4].includes(showListManagementModal) ? "h-[30%]" : "" }  flex flex-col text-white bg-[#141414] rounded-xl p-5 space-y-4`}>
+            <div className={`w-[50%] ${showListManagementModal == 2 ? "h-[28%]" : showListManagementModal === 3 ? "h-[35%]" : showListManagementModal == 4 ? "h-[30%]" : "" }  flex flex-col text-white bg-[#141414] rounded-xl p-5 space-y-4`}>
                 <div className="flex flex-row w-full justify-between">
-                    {lists.length != 0 && contactInfo && (<h1 className=' text-2xl text-[#d4d4d4] font-semibold'>{`${showListManagementModal == 1 ? "Enter List Name" : 
+                    {lists.length != 0 && (<h1 className=' text-2xl text-[#d4d4d4] font-semibold'>{`${showListManagementModal == 1 ? "Enter List Name" : 
                     showListManagementModal == 2 ? `Empty ${lists[selectedList]?.name}` : showListManagementModal == 3 
                     ? `Delete ${lists[selectedList]?.name}` : `Delete Contact: ${contactInfo.full_name.join(" ")}`}`}</h1>)}
                     <button className='place-self-end' onClick={() => dispatch(setShowListManagementModal(0))}>
                         <X size={30} color='#d4d4d4' />
                     </button>
                 </div>
-                {showListManagementModal == 1 && (<div className='flex flex-row w-full justify-evenly items-center h-[50%] bg-[#111111] rounded-xl p-3'>
+                {showListManagementModal == 1 && (<div className='flex flex-row w-full justify-evenly items-center h-[50%] bg-[#111111] rounded-xl p-4'>
                     <form onSubmit={createNewList} className='flex flex-row w-full justify-evenly items-center'>
                         <input
                             type="text"
@@ -124,11 +133,11 @@ function ListManagementModal() {
                     </form>
                 </div>)}
                 { showListManagementModal == 2 && (<div className='w-full h-full flex flex-col justify-evenly'>
-                    <div className='flex w-full justify-evenly items-center h-[30%] p-1 bg-[#111111] text-[#FF4C4C] rounded-xl'>
+                    <div className='flex w-full justify-evenly items-center h-[35%] bg-[#111111] text-[#FF4C4C] rounded-xl'>
                         <p>Are you sure you want to clear all contacts from this list?</p>
                     </div>
-                    <div className='flex flex-row w-full justify-evenly items-center h-[40%] bg-[#111111] rounded-xl'>
-                        <button className="p-2 h-10 w-fit bg-[#343434] text-[#141414] rounded-lg flex justify-center items-center cursor-pointer"
+                    <div className='flex flex-row w-full justify-evenly items-center h-[45%] bg-[#111111] rounded-xl'>
+                        <button className="p-2  h-10 w-fit bg-[#343434] text-[#141414] rounded-lg flex justify-center items-center cursor-pointer"
                         onClick={() => dispatch(setShowListManagementModal(0))}>
                         Cancel
                         </button>
@@ -139,11 +148,11 @@ function ListManagementModal() {
                     </div>
                 </div>)}
                 { showListManagementModal == 3 && (<div className='w-full h-full flex flex-col justify-evenly'>
-                    <div className='flex w-full justify-evenly items-center h-[40%] p-2 text-center bg-[#111111] text-[#FF4C4C] rounded-xl'>
+                    <div className='flex w-full justify-evenly items-center h-[35%] p-2 text-center bg-[#111111] text-[#FF4C4C] rounded-xl'>
                         <p>{`You currently have ${contactsLength} contacts associated with this list. Deleting the list will permanently remove all related contacts and their data. 
                         Are you sure you want to delete this list? `}</p>
                     </div>
-                    <div className='flex flex-row w-full justify-evenly items-center h-[40%] bg-[#111111] rounded-xl'>
+                    <div className='flex flex-row w-full justify-evenly items-center h-[35%] bg-[#111111] rounded-xl'>
                         <button className="p-2 h-10 w-fit bg-[#343434] text-[#141414] rounded-lg flex justify-center items-center cursor-pointer"
                         onClick={() => dispatch(setShowListManagementModal(0))}>
                         Cancel
@@ -155,10 +164,10 @@ function ListManagementModal() {
                     </div>
                 </div>)}
                 { showListManagementModal == 4 && contactInfo && (<div className='w-full h-full flex flex-col justify-evenly'>
-                    <div className='flex w-full justify-evenly items-center h-[40%] p-2 text-center bg-[#111111] text-[#FF4C4C] rounded-xl'>
+                    <div className='flex w-full justify-evenly items-center h-[35%] p-2 text-center bg-[#111111] text-[#FF4C4C] rounded-xl'>
                         <p>{`Are you sure you want to delete the following contact: ${contactInfo.full_name.join(" ") == "" ? "No Name" : contactInfo.full_name.join(" ")}? `}</p>
                     </div>
-                    <div className='flex flex-row w-full justify-evenly items-center h-[40%] bg-[#111111] rounded-xl'>
+                    <div className='flex flex-row w-full justify-evenly items-center h-[42%] bg-[#111111] rounded-xl'>
                         <button className="p-2 h-10 w-fit bg-[#343434] text-[#141414] rounded-lg flex justify-center items-center cursor-pointer"
                         onClick={() => dispatch(setShowListManagementModal(0))}>
                         Cancel

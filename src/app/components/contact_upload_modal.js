@@ -47,6 +47,14 @@ function ContactModal() {
         });
     };
 
+    const truncateFileName = (name, maxLength) => {
+        if (name.length <= maxLength) return name;
+        
+        const extension = name.split('.').pop();
+        const baseName = name.slice(0, name.lastIndexOf('.')).slice(0, maxLength - extension.length - 4);
+        return `${baseName}...${extension}`;
+    };
+
 
     return (
         <div className='fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-10 flex flex-col justify-center items-center'>
@@ -74,7 +82,9 @@ function ContactModal() {
                     </Dropzone>
                 </div>
                 <div className='flex flex-row w-[full] justify-evenly items-center h-[15%] bg-[#111111] rounded-xl mx-5'>
-                    <h1 className={`text-[#343434] ${incorrectFileAlert ? "text-[#e63946]" : "text-[#343434]"} text-xl`}>{`Uploaded File: ${ incorrectFileAlert ? "Incorrect File Type - Must Use (.vcf)" : file ? file.name : "No File Uploaded"}`}</h1>
+                    <div className="overflow-ellipsis overflow-hidden whitespace-nowrap w-[60%]">
+                        <h1 className={`text-[#343434] ${incorrectFileAlert ? "text-[#e63946]" : "text-[#343434]"} text-xl`}>{`Uploaded File: ${ incorrectFileAlert ? "Incorrect File Type - Must Use (.vcf)" : file ? truncateFileName(file.name, 40) : "No File Uploaded"}`}</h1>
+                    </div>
                     <button disabled={!file} className={`w-fit p-2 ${file ? 'bg-[#545454] text-[#141414] cursor-pointer' : 'bg-[#4a4a4a] text-[#242424] cursor-default'}  rounded-lg flex justify-center items-center cursor-pointer`}
                     onClick={() => { handleSubmit(); dispatch(setShowModal(false));}}>
                         <h1 className='text-center'>Extract Contacts</h1>
