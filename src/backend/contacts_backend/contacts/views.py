@@ -34,7 +34,7 @@ def read_and_convert_vcf_to_string(file_path): # TODO: must pass in a file_path 
         with open(file_path, 'r') as file:
             file_content = file.read().split("BEGIN:VCARD")
             file_content = ['BEGIN:VCARD' + vcard_data for vcard_data in file_content if vcard_data.strip()]
-
+    
             return file_content
     #     return HttpResponse(file_content, content_type='text/plain')
     except Exception as e:
@@ -85,17 +85,18 @@ def store_emails(email_list):
 # extracts encoded image and saves it locally for later retrieval
 def extract_and_save_image(image_data, file_name, folder_path):
     if not image_data:
-        return str(config('DEFAULT_PROFILE_PIC_PATH'))
+        return ""
     
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)    
     
     image_path = os.path.join(folder_path, f"{file_name if file_name else 'unnamed'}.jpeg")
+    image_rel_path = f"photo_storage/{file_name if file_name else 'unnamed'}.jpeg"
         
     with open(image_path, 'wb') as image_file:
         image_file.write(image_data)
     
-    return image_path
+    return image_rel_path
         
 
 
@@ -132,7 +133,8 @@ def parsed_vcf(request):
             photo_data = vcard.photo.value if hasattr(vcard, 'photo') else ''
             
             fn_list = store_full_name_as_list(fn)
-            photo_path = extract_and_save_image(photo_data, fn_list[0].lower(), config('PHOTO_FOLDER_PATH'))
+            photo_path = extract_and_save_image(photo_data, fn_list[0].lower(), config('PHOTO_FOLDER_PATH')) 
+            
             email_data = store_emails(emails)
             phone_no = store_telephone_nos(tel_nos)
             company = vcard.org.value[0] if hasattr(vcard, 'org') else ''

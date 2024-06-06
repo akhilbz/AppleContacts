@@ -6,6 +6,7 @@ import { setShowDropUp, setContactInfo, setNewContactInstance, setUploadAlert, s
 import ContactCardDropUp from './contact_card_dropup';
 import EditContactCard from './edit_contact_card';
 import NewContactCard from './new_contact_card';
+import { IoPerson } from "react-icons/io5";
 
 const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
     const dispatch = useDispatch();
@@ -58,6 +59,8 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
         let emails = [];
         let photoPath = "";
         
+        // Side Effect: every time a new list_contact_card is clicked, it will set it to false if showEdit is true
+        if (contactInfo && showEdit && newContactInstance) setShowEdit(false);
         
         if (contactInfo) {
             // ID Extraction:
@@ -99,7 +102,7 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
             email: emails,
             url: `http://127.0.0.1:3000/contacts/${id}.json`
         })
-    }, [contactInfo]);
+    }, [contactInfo, newContactInstance]);
     // console.log(contactInfo);
     // console.log(phoneNo.length != 0 && emails.length != 0 && company == "" && phoneNo['pref'].length == 0 && phoneNo['cell'].length == 0 
     // && phoneNo['home'].length == 0 && emails['home'].length == 0 && 
@@ -141,7 +144,7 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
             const contact_name = response.data.full_name;
             const charPos = contact_name[contact_name.length - 1].toLowerCase().charAt(0).charCodeAt(0) 
             - 'a'.charCodeAt(0);
-            
+
             dispatch(setNotifySelectedContact({char_pos: charPos, letter: contact_name[contact_name.length - 1].charAt(0)}));
             dispatch(setNewContactInstance(!newContactInstance));
             dispatch(setUploadAlert(6));
@@ -181,7 +184,8 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
     (<div className='flex flex-col overflow-y-auto w-full h-fit font-light space-y-4'>
         <div className='flex w-full items-center space-x-6 justify-between pb-6'> 
                 <div className='w-28 h-28 bg-gray-200 rounded-full overflow-hidden flex items-center justify-center'>
-                    <img src={photoPath} alt="Profile" className="w-full h-full object-cover" />
+                    {photoPath != "" && (<img src={photoPath} className="w-full h-full object-cover" />)}
+                    {photoPath == "" && (<IoPerson size={60} color="#141414"/>)}
                 </div>
 
                 <div className='flex-1 border-b-[1px] border-[#7c7c7c] pb-2'> 
@@ -263,7 +267,7 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
         <IoAddOutline size={30} color="#9B9B9B"/>
         </div>
         <div className="flex space-x-2">
-        {contact != null && !newContactInstance && (<div className='h-9 w-fit bg-[#141414] rounded-lg flex justify-center items-center cursor-pointer opacity-1 transition-opacity duration-500'
+        {contact && !newContactInstance && (<div className='h-9 w-fit bg-[#141414] rounded-lg flex justify-center items-center cursor-pointer opacity-1 transition-opacity duration-500'
         onClick={() => setShowEdit(!showEdit)}>
             <h1 className={`${showEdit ? "text-[#66b3ff]" : "text-[#9B9B9B]"} font-normal px-6`}>{showEdit ? "Done" : "Edit"}</h1>
         </div>)}

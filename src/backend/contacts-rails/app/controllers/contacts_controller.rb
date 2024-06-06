@@ -8,6 +8,9 @@ class ContactsController < ApplicationController
 
   # GET /contacts/1 or /contacts/1.json
   def show
+    # puts "B4: #{@contact.photo_path}"
+    # @contact.photo_path = @contact.photo_path.gsub("/Users/akhileshbitla/Work/projects/contacts/public/", "")
+    # puts "A4: #{@contact.photo_path}"
   end
 
   # GET /contacts/new

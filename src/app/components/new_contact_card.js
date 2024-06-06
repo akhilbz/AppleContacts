@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { setShowEditDropDown } from "../action"; 
 import { useSelector, useDispatch} from "react-redux";
+import { IoPerson } from "react-icons/io5";
 
 const NewContactCard = ({ newContact, setNewContact }) => {
     const showEditDropDown = useSelector(state => state.showEditDropDown);
@@ -95,8 +96,12 @@ const NewContactCard = ({ newContact, setNewContact }) => {
         <div className="flex flex-col w-full h-full p-5 mb-5 rounded-xl border-[#7c7c7c] border-[1px] bg-[#161616] ">
             <div className='flex flex-col overflow-y-auto w-full h-full font-light space-y-4'>
                 <div className='flex w-full items-center space-x-6 justify-between pb-6'> 
-                    <div className=' w-24 h-24  bg-[#7c7c7c] rounded-full overflow-hidden flex items-center justify-center'>
-                        <img src={newContact.photo_path} alt="Profile" className="w-full h-full object-cover" />
+                    <div className='relative w-24 h-24 bg-[#7c7c7c] rounded-full overflow-hidden flex items-center justify-center group'>
+                        {newContact.photo_path !== "" ? (<img src={newContact.photo_path} className="w-full h-full object-cover" alt="Profile" />) : 
+                        (<IoPerson size={50} color="#cdcdcd" />)}
+                        <div className="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer" onClick={() => {}}>
+                            <span className="text-[#cdcdcd] text-md font-light">Edit</span>
+                        </div>
                     </div>
                     <div className='flex-1 flex border-b-[1px] items-end justify-end border-[#7c7c7c] pb-2'> 
                         <input

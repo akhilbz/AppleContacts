@@ -39,6 +39,7 @@ function ListManagementModal() {
             const response = await axios.delete(`http://127.0.0.1:3000/lists/${lists[selectedList].id}/empty`);
             dispatch(setUploadAlert(2));
             dispatch(setShowListManagementModal(0));
+            dispatch(setContactInfo(null)); 
             console.log(response.data.message);
         } catch (error) {
             console.log('Failed to clear contacts: ' + error.response.data.error);
@@ -67,6 +68,7 @@ function ListManagementModal() {
                 console.log("test");
                 dispatch(setUploadAlert(3));
                 dispatch(setSelectedList((selectedList - 1) < 0 ? selectedList : selectedList - 1));
+                dispatch(setContactInfo(null));
                 dispatch(setShowListManagementModal(0));
             } else {
                 console.log("Failed to delete selected list: ", responseDeleteList.data);
@@ -94,13 +96,14 @@ function ListManagementModal() {
             console.log(e);
         }
     };
-
+    console.log(showListManagementModal == 1);
     return (
         <div className='fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-20 flex flex-col justify-center items-center'>
             <div className={`w-[50%] ${[2, 3, 4].includes(showListManagementModal) ? "h-[30%]" : "" }  flex flex-col text-white bg-[#141414] rounded-xl p-5 space-y-4`}>
                 <div className="flex flex-row w-full justify-between">
                     {lists.length != 0 && contactInfo && (<h1 className=' text-2xl text-[#d4d4d4] font-semibold'>{`${showListManagementModal == 1 ? "Enter List Name" : 
-                    showListManagementModal == 2 ? `Empty ${lists[selectedList]?.name}` : showListManagementModal == 3 ? `Delete ${lists[selectedList]?.name}` : `Delete Contact: ${contactInfo.full_name.join(" ")}`}`}</h1>)}
+                    showListManagementModal == 2 ? `Empty ${lists[selectedList]?.name}` : showListManagementModal == 3 
+                    ? `Delete ${lists[selectedList]?.name}` : `Delete Contact: ${contactInfo.full_name.join(" ")}`}`}</h1>)}
                     <button className='place-self-end' onClick={() => dispatch(setShowListManagementModal(0))}>
                         <X size={30} color='#d4d4d4' />
                     </button>
