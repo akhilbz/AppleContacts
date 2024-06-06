@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setShowListManagementModal, setSelectedList, setDeletedContact, setUploadAlert, setContactInfo } from '../action';
+import { setShowListManagementModal, setSelectedList, setDeletedContact, setUploadAlert, setContactInfo, setSelectedContact } from '../action';
 import axios from 'axios';
 import { MdOutlineFileUpload } from "react-icons/md";
 import { X } from 'lucide-react';
@@ -40,16 +40,13 @@ function ListManagementModal() {
             dispatch(setUploadAlert(2));
             dispatch(setShowListManagementModal(0));
             dispatch(setContactInfo(null)); 
-            dispatch(setSelectedList(-1));
+            dispatch(setSelectedContact([-1, -1]));
             console.log(response.data.message);
         } catch (error) {
             console.log('Failed to clear contacts: ' + error.response.data.error);
         }
     };
 
-    // console.log(selectedList);
-    // console.log(lists[selectedList].id)
-    // console.log(deletedList)
     // showListManagementModal == 3 
     // Empty the contacts and then delete the list
     const deleteSelectedList = async () => {
@@ -69,7 +66,7 @@ function ListManagementModal() {
                 console.log("test");
                 dispatch(setUploadAlert(3));
                 dispatch(setSelectedList((selectedList - 1) < 0 ? selectedList : selectedList - 1));
-                if (contactsLength == 1) dispatch(setContactInfo(null));
+                dispatch(setContactInfo(null)); 
                 dispatch(setShowListManagementModal(0));
             } else {
                 console.log("Failed to delete selected list: ", responseDeleteList.data);

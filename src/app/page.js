@@ -3,7 +3,7 @@ import axios from "axios";
 import React from 'react';
 import { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { setUploadAlert, setLists, setContactsLength, setUploadNotification, setSelectedContact, setNotifySelectedContact } from "./action";
+import { setUploadAlert, setLists, setContactsLength, setUploadNotification, setSelectedContact, setNotifySelectedContact, setContactInfo } from "./action";
 import ListContactCard from "./components/list_contact_card";
 import ListListCard from "./components/list_list_card";
 import ContactCardHeader from "./components/contact_card_header";
@@ -28,9 +28,11 @@ export default function Home() {
   const uploadAlert = useSelector(state => state.uploadAlert);
   const showListManagementModal = useSelector(state => state.showListManagementModal);
   const selectedList = useSelector(state => state.selectedList);
+  const selectedContact = useSelector(state => state.selectedContact);
   const lists = useSelector(state => state.lists);
   const uploadNotification = useSelector(state => state.uploadNotification);
   const notifySelectedContact = useSelector(state => state.notifySelectedContact);
+  const deletedContact = useSelector(state => state.deletedContact);
   const dispatch = useDispatch();
 
   // TODO: Add an Activity Indicator for Uploading Contacts
@@ -47,8 +49,6 @@ export default function Home() {
         const responseLists = await axios.get('http://127.0.0.1:3000/lists/');
         const listsData = responseLists.data.list;
         dispatch(setLists(listsData));
-        // console.log(listsData.length);
-        // console.log(selectedList);
   
         if (listsData.length === 0) {
           // No lists available, handle the empty state
@@ -84,9 +84,8 @@ export default function Home() {
           var leftover_contacts = [];
           for (var k = 0; k < size; k++) {
             const contact = responseContacts.data.contacts[k].full_name;
-            if (contact[contact.length - 1] == '' || (contact[contact.length - 1].toLowerCase().charAt(0) < 'a'.charCodeAt(0)) 
-            || (contact[contact.length - 1].toLowerCase().charAt(0) > 'z'.charCodeAt(0)) 
-            || contact[contact.length - 1].toLowerCase().charAt(0) == '(') {
+            if (contact[contact.length - 1] == '' || (contact[contact.length - 1].toLowerCase().charCodeAt(0) < 'a'.charCodeAt(0)) 
+            || (contact[contact.length - 1].toLowerCase().charCodeAt(0) > 'z'.charCodeAt(0))) {
               leftover_contacts.push(responseContacts.data.contacts[k]);
             }
           }
@@ -107,10 +106,9 @@ export default function Home() {
     
     fetchData();
   }, [selectedList, uploadAlert, dispatch]);
-  
+
   useEffect(() => {
     let timer;
-    console.log(uploadNotification != 0);
     if (uploadNotification !== 0) {
         timer = setTimeout(() => {
             dispatch(setUploadNotification(0));
@@ -171,7 +169,6 @@ export default function Home() {
     else if (isMCResizing) mcHandleMouseUp();
   };
 
-  // console.log(middleWidth + " " + leftWidth + " " + rightWidth);
   useEffect(() => {
     if (notifySelectedContact) {
       const contactObj = contacts.find(contact => contact[notifySelectedContact.letter.toUpperCase()]);
@@ -182,6 +179,81 @@ export default function Home() {
     }
   }, [notifySelectedContact, contacts, dispatch]);
 
+  function findNextPrevAvailableContact(contacts, selectedContact) {
+    for (let i = 0; i < selectedContact[1]; i++) {
+      if (i < (selectedContact[1]) && 
+      contacts[i][Object.keys(contacts[i])[0]].length > 0) {
+        return {contact: contacts[i], contact_index: i};
+      }
+    }
+    return null;
+  }
+
+
+
+  function findNextAvailableContact(contacts, selectedContact) {
+    for (let i = selectedContact[1]; i < contacts.length - 1; i++) {
+      if (i > (selectedContact[1]) && 
+      contacts[i][Object.keys(contacts[i])[0]].length > 0) {
+        return {contact: contacts[i], contact_index: i};
+      }
+    }
+    return null;
+  }
+
+  useEffect( () => {
+    if (deletedContact && selectedContact) {
+      var contact_id = -1;
+      var contact_obj = contacts[selectedContact[1]];
+      var contact_key = Object.keys(contact_obj)[0];
+      var contact = contact_obj[contact_key][selectedContact[0] + 1];
+
+      var next_letter_contact = null;
+      var next_contact_info = findNextAvailableContact(contacts, selectedContact);
+      var next_letter_contact_obj = next_contact_info ? next_contact_info.contact : null;
+      if (next_letter_contact_obj) {
+        var next_letter_contact_key = Object.keys(next_letter_contact_obj)[0];
+        next_letter_contact = next_letter_contact_obj[next_letter_contact_key][0];
+      }
+
+      var prev_letter_contact = null;
+      var prev_contact_info = findNextPrevAvailableContact(contacts, selectedContact);
+      var prev_letter_contact_obj = prev_contact_info ? prev_contact_info.contact : null;
+      
+      if (prev_letter_contact_obj) {
+        var prev_letter_contact_key = Object.keys(prev_letter_contact_obj)[0];
+        prev_letter_contact = prev_letter_contact_obj[prev_letter_contact_key][prev_letter_contact_obj[prev_letter_contact_key].length - 1];
+      }
+
+      if (contact) {
+        contact_id = contact.id;
+      } else if (!contact && contact_obj[contact_key][selectedContact[0] - 1]) {
+        contact_id = contact_obj[contact_key][selectedContact[0] - 1].id;
+        dispatch(setSelectedContact([selectedContact[0] - 1, selectedContact[1]]));
+      } else if (!contact && !contact_obj[contact_key][selectedContact[0] - 1] && next_letter_contact) {
+        contact_id = next_letter_contact.id;
+        dispatch(setSelectedContact([0, next_contact_info.contact_index]));
+      } else if (!contact && !contact_obj[contact_key][selectedContact[0] - 1] 
+        && !next_letter_contact && prev_letter_contact) {
+          contact_id = prev_letter_contact.id;
+          dispatch(setSelectedContact([prev_letter_contact_obj[Object.keys(prev_letter_contact_obj)[0]].length - 1, prev_contact_info.contact_index]));
+      } else {
+        dispatch(setSelectedContact([-1, -1]));
+      }
+      const retrieveContactData = async () => {
+        try {
+          const response = await axios.get(`http://127.0.0.1:3000/contacts/${contact_id}.json`)
+          dispatch(setContactInfo(response.data));
+        } catch (err) {
+            console.log(err);
+        }
+      }
+
+      if (contact_id !== -1) {
+        retrieveContactData();
+      }
+    }
+  }, [deletedContact]);
 
   return (
     <main ref={containerRef} className="flex h-screen w-full overflow-hidden p-12"
@@ -222,10 +294,6 @@ export default function Home() {
             <div className="flex-1 overflow-y-auto px-2">
               {contacts.map((contact_obj, order_index) => {
                 var contact_key = Object.keys(contact_obj)[0];
-                // if (notifySelectedContact && contact_obj[notifySelectedContact.letter.toUpperCase()]) { 
-                //   dispatch(setSelectedContact([contact_obj[notifySelectedContact.letter.toUpperCase()].length, notifySelectedContact.char_pos]));
-                //   dispatch(setNotifySelectedContact(null));
-                // }
                 return (
                   contact_obj[contact_key].length > 0 && (<React.Fragment>
                     <ContactCardHeader key={order_index} letter={contact_key} />

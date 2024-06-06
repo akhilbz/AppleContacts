@@ -5,6 +5,7 @@ import axios from 'axios';
 const ListContactCard = ({ name_index, order_index, contact_info }) => {
     const selectedContact = useSelector(state => state.selectedContact);
     const newContactInstance = useSelector(state => state.newContactInstance);
+    const deletedContact = useSelector(state => state.deletedContact);
     const dispatch = useDispatch();
 
     var full_name = "";
@@ -40,9 +41,8 @@ const ListContactCard = ({ name_index, order_index, contact_info }) => {
         } catch (err) {
             console.log(err);
         }
-        
     };
-    // console.log(name_index + ": " + order_index);
+
     return (
     <div className='flex w-full h-fit rounded-xl ' 
     style={{ backgroundColor: selectedContact[0] == name_index 

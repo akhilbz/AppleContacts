@@ -103,7 +103,6 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
             url: `http://127.0.0.1:3000/contacts/${id}.json`
         })
     }, [contactInfo, newContactInstance]);
-    // console.log(contactInfo);
     // console.log(phoneNo.length != 0 && emails.length != 0 && company == "" && phoneNo['pref'].length == 0 && phoneNo['cell'].length == 0 
     // && phoneNo['home'].length == 0 && emails['home'].length == 0 && 
     // emails['internet'].length == 0);
@@ -171,7 +170,6 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
             email: {"home": [], "internet": []},
         });
     };
-
 
     return (
     <section className='flex flex-col w-full h-full'>

@@ -5,7 +5,7 @@ const initialState = {
     contactInfo: null,
     lists: [],
     contactsLength: 0,
-    selectedContact: 0,
+    selectedContact: [],
     selectedList: 0,
     deletedList: null,
     deletedContact: "",

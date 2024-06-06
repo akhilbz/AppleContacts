@@ -24,9 +24,11 @@ function ContactModal() {
     };
 
     console.log(file);
-
+    console.log(selectedList);
+    console.log(lists[selectedList].id);
     const handleSubmit = () => {
         console.log(file.path);
+        
         const formData = new FormData();
         formData.append('file', file);
         formData.append('id', lists[selectedList].id);
