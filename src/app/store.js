@@ -10,12 +10,15 @@ const initialState = {
     deletedList: null,
     deletedContact: "",
     showModal: false,
+    showPhotoModal: null,
+    photoData: "",
     showListManagementModal: 0, // 0: Default, 1: New List, 2: Empty List, 3: Delete List
     showDropUp: false,
     showEditDropDown: false,
     uploadAlert: 0,
     uploadNotification: 0,
-    notifySelectedContact: null
+    notifySelectedContact: null,
+    
   };
   
   const rootReducer = (state = initialState, action) => {
@@ -39,6 +42,10 @@ const initialState = {
             return { ...state, deletedContact: action.payload };
         case 'SET_SHOW_MODAL':
             return { ...state, showModal: action.payload };
+        case 'SET_SHOW_PHOTO_MODAL':
+            return { ...state, showPhotoModal: action.payload };
+        case 'SET_PHOTO_DATA':
+            return { ...state, photoData: action.payload };
         case 'SET_SHOW_LIST_MANAGEMENT_MODAL':
             return { ...state, showListManagementModal: action.payload };
         case 'SET_SHOW_DROP_UP':

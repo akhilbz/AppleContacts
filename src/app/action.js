@@ -5,6 +5,8 @@ export const SET_LISTS = 'SET_LISTS';
 export const SET_CONTACTS_LENGTH = 'SET_CONTACTS_LENGTH';
 export const SET_SELECTED_CONTACT = 'SET_SELECTED_CONTACT';
 export const SET_SHOW_MODAL = 'SET_SHOW_MODAL';
+export const SET_SHOW_PHOTO_MODAL = 'SET_SHOW_PHOTO_MODAL';
+export const SET_PHOTO_DATA = 'SET_PHOTO_DATA';
 export const SET_SHOW_LIST_MANAGEMENT_MODAL = 'SET_SHOW_LIST_MANAGEMENT_MODAL';
 export const SET_SHOW_DROP_UP = 'SET_SHOW_DROP_UP';
 export const SET_SHOW_EDIT_DROP_DOWN = 'SET_SHOW_EDIT_DROP_DOWN';
@@ -59,6 +61,16 @@ export const setDeletedContact = (deletedContact) => ({
 export const setShowModal = (showModal) => ({
     type: SET_SHOW_MODAL,
     payload: showModal
+});
+
+export const setShowPhotoModal = (showPhotoModal) => ({
+    type: SET_SHOW_PHOTO_MODAL,
+    payload: showPhotoModal
+});
+
+export const setPhotoData = (photoData) => ({
+    type: SET_PHOTO_DATA,
+    payload: photoData
 });
 
 export const setShowListManagementModal = (showListManagementModal) => ({

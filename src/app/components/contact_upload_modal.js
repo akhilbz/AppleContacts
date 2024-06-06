@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import Dropzone from 'react-dropzone';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';

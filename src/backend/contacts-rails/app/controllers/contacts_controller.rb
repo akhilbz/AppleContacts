@@ -59,6 +59,35 @@ class ContactsController < ApplicationController
     end
   end
 
+  def upload_photo
+    photo = params[:photo]
+    puts "Photo: #{photo}"
+
+    if photo.present?
+      file_name = "#{SecureRandom.uuid}_#{photo.original_filename}"
+      file_path = Rails.root.join(ENV["PHOTO_STORAGE_PATH"], "photo_storage", file_name)
+      puts "file_path: #{file_path}"
+      File.open(file_path, 'wb') do |file|
+        file.write(photo.read)
+      end
+
+      render json: { success: "Photo successfully uploaded", photo_rel_path: "photo_storage/#{file_name}"  }, status: :ok
+    else
+      render json: { error: 'No photo uploaded' }, status: :unprocessable_entity
+    end
+  end
+
+  def delete_photo
+    file_path = Rails.root.join(ENV["PHOTO_STORAGE_PATH"], params[:photo_path])
+
+    if File.exist?(file_path)
+      File.delete(file_path)
+      render json: { success: 'Photo successfully deleted' }, status: :ok
+    else
+      render json: { error: 'File not found' }, status: :not_found
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_contact

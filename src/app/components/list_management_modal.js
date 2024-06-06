@@ -40,6 +40,7 @@ function ListManagementModal() {
             dispatch(setUploadAlert(2));
             dispatch(setShowListManagementModal(0));
             dispatch(setContactInfo(null)); 
+            dispatch(setSelectedList(-1));
             console.log(response.data.message);
         } catch (error) {
             console.log('Failed to clear contacts: ' + error.response.data.error);
@@ -68,7 +69,7 @@ function ListManagementModal() {
                 console.log("test");
                 dispatch(setUploadAlert(3));
                 dispatch(setSelectedList((selectedList - 1) < 0 ? selectedList : selectedList - 1));
-                dispatch(setContactInfo(null));
+                if (contactsLength == 1) dispatch(setContactInfo(null));
                 dispatch(setShowListManagementModal(0));
             } else {
                 console.log("Failed to delete selected list: ", responseDeleteList.data);

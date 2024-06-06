@@ -10,6 +10,7 @@ import ContactCardHeader from "./components/contact_card_header";
 import ContactCard from "./components/contact_card";
 import { IoSearchOutline } from "@react-icons/all-files/io5/IoSearchOutline";
 import ContactModal from "./components/contact_upload_modal";
+import ContactPhotoModal from "./components/contact_photo_upload_modal";
 import ListManagementModal from "./components/list_management_modal";
 import Notifications from "./components/notifications";
 import { throttle } from "lodash";
@@ -23,6 +24,7 @@ export default function Home() {
   const [contacts, setContacts] = useState([]);
   const containerRef = useRef(null);
   const showModal = useSelector(state => state.showModal);
+  const showPhotoModal = useSelector(state => state.showPhotoModal);
   const uploadAlert = useSelector(state => state.uploadAlert);
   const showListManagementModal = useSelector(state => state.showListManagementModal);
   const selectedList = useSelector(state => state.selectedList);
@@ -186,6 +188,7 @@ export default function Home() {
       onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
       {uploadNotification != 0 && (<Notifications />)}
       {showModal && <ContactModal />}
+      {showPhotoModal && showPhotoModal.showModal && <ContactPhotoModal current_photo={showPhotoModal.current_photo} />}
       {showListManagementModal != 0 && <ListManagementModal />}
       {leftWidth != 0 && (<div className="relative bg-[#161616] h-full rounded-l-xl  flex flex-col p-3" style={{ width: `${leftWidth}%`, maxWidth: `20%` }}>
         <div className="flex w-full h-fit justify-between border-b-[1px] border-[#2f2f2f] pb-3">

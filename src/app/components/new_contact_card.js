@@ -1,10 +1,11 @@
 import React, { useEffect, useRef } from "react";
-import { setShowEditDropDown } from "../action"; 
+import { setShowEditDropDown, setShowPhotoModal } from "../action"; 
 import { useSelector, useDispatch} from "react-redux";
 import { IoPerson } from "react-icons/io5";
 
 const NewContactCard = ({ newContact, setNewContact }) => {
     const showEditDropDown = useSelector(state => state.showEditDropDown);
+    const photoData = useSelector(state => state.photoData);
     const dropDownRef = useRef(null);
     const dispatch = useDispatch();
     
@@ -24,6 +25,13 @@ const NewContactCard = ({ newContact, setNewContact }) => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
         }, [showEditDropDown]);
+
+    useEffect(() => {
+        setNewContact({
+            ...newContact,
+            photo_path: photoData,
+        });
+    }, [photoData]);
 
     // Handles Value of Text Fields
     const handleFullNameChange = (event) => {
@@ -99,7 +107,7 @@ const NewContactCard = ({ newContact, setNewContact }) => {
                     <div className='relative w-24 h-24 bg-[#7c7c7c] rounded-full overflow-hidden flex items-center justify-center group'>
                         {newContact.photo_path !== "" ? (<img src={newContact.photo_path} className="w-full h-full object-cover" alt="Profile" />) : 
                         (<IoPerson size={50} color="#cdcdcd" />)}
-                        <div className="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer" onClick={() => {}}>
+                        <div className="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer" onClick={() => { dispatch(setShowPhotoModal({ showModal: true, current_photo: newContact.photo_path}));}}>
                             <span className="text-[#cdcdcd] text-md font-light">Edit</span>
                         </div>
                     </div>

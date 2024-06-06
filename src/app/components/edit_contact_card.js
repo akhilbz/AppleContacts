@@ -1,12 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { IoAddOutline } from "@react-icons/all-files/io5/IoAddOutline";
-import { setShowEditDropDown } from "../action"; 
+import { setShowEditDropDown, setShowPhotoModal } from "../action"; 
 import EditContactCardDropdown from "./edit_contact_card_dropdown";
 import { useSelector, useDispatch} from "react-redux";
 import { IoPerson } from "react-icons/io5";
 
 const EditContactCard = ({ editedContacts, setEditedContacts }) => {
     const showEditDropDown = useSelector(state => state.showEditDropDown);
+    const photoData = useSelector(state => state.photoData);
     const dropDownRef = useRef(null);
     const dispatch = useDispatch();
     const handleClickOutside = (event) => {
@@ -26,6 +27,13 @@ const EditContactCard = ({ editedContacts, setEditedContacts }) => {
         };
         }, [showEditDropDown]);
 
+    useEffect(() => {
+        setEditedContacts({
+            ...editedContacts,
+            photo_path: photoData,
+        });
+    }, [photoData]);
+    console.log(photoData);
     // Handles Value of Text Fields
     const handleFullNameChange = (event) => {
         const value = event.target.value;
@@ -157,7 +165,7 @@ const EditContactCard = ({ editedContacts, setEditedContacts }) => {
                     <div className='relative w-24 h-24 bg-[#7c7c7c] rounded-full overflow-hidden flex items-center justify-center group'>
                         {editedContacts.photo_path !== "" ? (<img src={editedContacts.photo_path} className="w-full h-full object-cover" alt="Profile" />) : 
                         (<IoPerson size={50} color="#cdcdcd" />)}
-                        <div className="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer" onClick={() => {}}>
+                        <div className="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer" onClick={() => {dispatch(setShowPhotoModal({ showModal: true, current_photo: editedContacts.photo_path}));}}>
                             <span className="text-[#cdcdcd] text-md font-light">Edit</span>
                         </div>
                     </div>
