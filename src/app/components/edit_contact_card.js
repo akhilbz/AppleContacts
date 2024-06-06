@@ -30,7 +30,7 @@ const EditContactCard = ({ editedContacts, setEditedContacts }) => {
     useEffect(() => {
         setEditedContacts({
             ...editedContacts,
-            photo_path: photoData,
+            photo_path: photoData
         });
     }, [photoData]);
     console.log(photoData);

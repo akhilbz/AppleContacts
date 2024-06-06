@@ -115,7 +115,7 @@ function ContactPhotoModal({ current_photo }) {
                         <h1 className='text-center'>Set Profile Picture</h1>
                     </button>)}
                     {photoPath != "" && (<button className={`w-fit p-2 ${photo ? 'bg-[#545454] text-[#141414] cursor-pointer' : 'bg-[#4a4a4a] text-[#242424]'}  rounded-lg flex justify-center items-center cursor-pointer`}
-                    onClick={() => {deleteExistingPhoto(); setPhotoPath("")}}>
+                    onClick={() => {deleteExistingPhoto(); setPhotoPath(""); setPhotoData("");}}>
                         <h1 className='text-center'>Clear Photo</h1>
                     </button>)}
                     {photoPath == "" && (<button className={`w-fit py-2 px-5 ${photo ? 'bg-[#545454] text-[#141414] cursor-pointer' : 'bg-[#4a4a4a] text-[#242424]'}  rounded-lg flex justify-center items-center cursor-pointer`}
