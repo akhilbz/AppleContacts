@@ -25,6 +25,7 @@ function ListManagementModal() {
                 dispatch(setUploadAlert(1));
                 dispatch(setShowListManagementModal(0));
                 dispatch(setSelectedList(selectedList < 0 ? 0 : lists.length));
+                dispatch(setSelectedContact([-1, -1]));
             } else {
                 console.error('Error creating list:', response.data);
             }
@@ -108,9 +109,9 @@ function ListManagementModal() {
         <div className='fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-20 flex flex-col justify-center items-center'>
             <div className={`w-[50%] ${showListManagementModal == 2 ? "h-[28%]" : showListManagementModal === 3 ? "h-[35%]" : showListManagementModal == 4 ? "h-[30%]" : "" }  flex flex-col text-white bg-[#141414] rounded-xl p-5 space-y-4`}>
                 <div className="flex flex-row w-full justify-between">
-                    {lists.length != 0 && (<h1 className=' text-2xl text-[#d4d4d4] font-semibold'>{`${showListManagementModal == 1 ? "Enter List Name" : 
+                    <h1 className=' text-2xl text-[#d4d4d4] font-semibold'>{`${showListManagementModal == 1 ? "Enter List Name" : 
                     showListManagementModal == 2 ? `Empty ${lists[selectedList]?.name}` : showListManagementModal == 3 
-                    ? `Delete ${lists[selectedList]?.name}` : `Delete Contact: ${contactInfo.full_name.join(" ")}`}`}</h1>)}
+                    ? `Delete ${lists[selectedList]?.name}` : `Delete Contact: ${contactInfo.full_name.join(" ")}`}`}</h1>
                     <button className='place-self-end' onClick={() => dispatch(setShowListManagementModal(0))}>
                         <X size={30} color='#d4d4d4' />
                     </button>

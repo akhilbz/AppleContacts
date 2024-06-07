@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { IoAddOutline } from "@react-icons/all-files/io5/IoAddOutline"; 
-import { setShowDropUp, setContactInfo, setSelectedContact, setNewContactInstance, setUploadAlert, setNotifySelectedContact } from '../action';
+import { setShowDropUp, setContactInfo, setSelectedContact, setNewContactInstance, setUploadAlert, setNotifySelectedContact, setPhotoData } from '../action';
 import ContactCardDropUp from './contact_card_dropup';
 import EditContactCard from './edit_contact_card';
 import NewContactCard from './new_contact_card';
@@ -25,6 +25,7 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
     const selectedList = useSelector(state => state.selectedList);
     const lists = useSelector(state => state.lists);
     const dropUpRef = useRef(null);
+    const photoData = useSelector(state => state.photoData);
     const [editedContacts, setEditedContacts] = useState(null);
     const [newContact, setNewContact] = useState({
         full_name: [""],
@@ -93,6 +94,7 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
         setPhoneNo(phoneNos);
         setEmails(emails);
         setPhotoPath(photoPath);
+        // setPhotoData(photoPath);
         setEditedContacts({
             id: id,
             full_name: name,
@@ -112,8 +114,8 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
                 try {
                     const response = await axios.get(`http://127.0.0.1:3000/contacts/${contactId}.json`)
                     dispatch(setContactInfo(response.data));
+                    dispatch(setPhotoData(""));
                 } catch (err) {
-                    // console.log(err);
                 }
             } catch (err) {
                 console.log(err);
