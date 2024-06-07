@@ -28,18 +28,23 @@ const EditContactCard = ({ editedContacts, setEditedContacts }) => {
         }, [showEditDropDown]);
 
     useEffect(() => {
-        setEditedContacts({
-            ...editedContacts,
-            photo_path: photoData
-        });
+        const handlePhotoPathChange = () => {
+            setEditedContacts(prevState => ({
+                ...prevState,
+                photo_path: photoData
+            }));
+        };
+        if (photoData === "" || photoData !== "") {
+            handlePhotoPathChange();
+        }
     }, [photoData]);
-    console.log(photoData);
+
     // Handles Value of Text Fields
     const handleFullNameChange = (event) => {
         const value = event.target.value;
         setEditedContacts({
             ...editedContacts,
-            full_name: value === '' ? ["No", "Name"] : [value],
+            full_name: value === '' ? ["No", "Name"] : value.split(" "),
         });
     };
 
@@ -157,6 +162,7 @@ const EditContactCard = ({ editedContacts, setEditedContacts }) => {
             },
         });
     };
+    console.log(photoData);
     console.log(editedContacts);
     return (
         <div className="flex flex-col w-full h-full p-5 mb-5 rounded-xl border-[#7c7c7c] border-[1px] bg-[#161616] ">

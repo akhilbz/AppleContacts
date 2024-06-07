@@ -26,19 +26,33 @@ const NewContactCard = ({ newContact, setNewContact }) => {
         };
         }, [showEditDropDown]);
 
-    useEffect(() => {
-        setNewContact({
-            ...newContact,
-            photo_path: photoData,
-        });
-    }, [photoData]);
-
+        useEffect(() => {
+            const handlePhotoPathChange = () => {
+                setNewContact(prevState => ({
+                    ...prevState,
+                    photo_path: photoData
+                }));
+            };
+            if (photoData === "" || photoData !== "") {
+                handlePhotoPathChange();
+            }
+        }, [photoData]);
+    
+        // useEffect(() => {
+        //     console.log("photoData inside effect:", photoData);
+        //     console.log("newContact.photo_path inside effect:", newContact.photo_path);
+        // }, [photoData, newContact]);
+    
+        // console.log("photoData outside effect:", photoData);
+        // console.log("newContact.photo_path outside effect:", newContact.photo_path);
+    
+        
     // Handles Value of Text Fields
     const handleFullNameChange = (event) => {
         const value = event.target.value;
         setNewContact({
             ...newContact,
-            full_name: [value],
+            full_name: value.split(" "),
         });
     };
 

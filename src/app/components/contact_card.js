@@ -94,7 +94,7 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
         setPhoneNo(phoneNos);
         setEmails(emails);
         setPhotoPath(photoPath);
-        // setPhotoData(photoPath);
+        if (showEdit) dispatch(setPhotoData(photoPath));
         setEditedContacts({
             id: id,
             full_name: name,
@@ -104,8 +104,8 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
             email: emails,
             url: `http://127.0.0.1:3000/contacts/${id}.json`
         })
-    }, [contactInfo, newContactInstance]);
-
+    }, [contactInfo, newContactInstance, showEdit]);
+    console.log(contactInfo);
     useEffect(() => {
         const updateContact = async () => {
             try {
@@ -155,6 +155,7 @@ const ContactCard = ({ listsColumnWidth, setListsColumnWidth }) => {
                 phone_no: {"cell": [], "home": [], "pref": []},
                 email: {"home": [], "internet": []},
             });
+            dispatch(setPhotoData(""));
         } catch (err) {
             console.log(err);
         } 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSelectedList, setUploadAlert, setShowListManagementModal, setDeletedList } from '../action';
+import { setSelectedList, setUploadAlert, setShowListManagementModal, setDeletedList, setContactInfo, setSelectedContact } from '../action';
 import axios from 'axios';
 
 const ListListCard = ({  list, list_index }) => {
@@ -27,7 +27,7 @@ const ListListCard = ({  list, list_index }) => {
     <div 
       className='flex w-full h-fit rounded-xl group' 
       style={{ backgroundColor: selectedList === (list_index) ? '#4a4a4a' : ''}} 
-      onClick={() => dispatch(setSelectedList(list_index))}>
+      onClick={() => {dispatch(setSelectedList(list_index)); dispatch(setContactInfo(null)); dispatch(setSelectedContact([-1, -1]));}}>
       <h2 className='text-center m-2 flex w-full text-lg text-[#d4d4d4] overflow-ellipsis'>{ list.name }</h2>
       <button 
         className={`text-[#d4d4d4] text-lg mr-2 hidden ${selectedList == (list_index) ? "group-hover:block" : ""}`} 
